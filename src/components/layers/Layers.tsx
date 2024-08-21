@@ -10,6 +10,7 @@ import { useAppSelector } from "@/lib/redux/hooks";
 import { Button } from "../ui/Button";
 import { Layers2 } from "lucide-react";
 import LayerImage from "./LayerImage";
+import LayerInfo from "./LayerInfo";
 
 export default function Layers() {
   const isGeneratingImage = useAppSelector((state) => state.image.isGenerating);
@@ -31,7 +32,7 @@ export default function Layers() {
         </div>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col">
-        {layers.map((layer) => (
+        {layers.map((layer, index) => (
           <div
             key={layer.id}
             className={cn(
@@ -47,6 +48,7 @@ export default function Layers() {
                   </p>
                 )}
                 <LayerImage layer={layer} />
+                <LayerInfo layer={layer} layerIndex={index} />
               </div>
             </div>
           </div>
