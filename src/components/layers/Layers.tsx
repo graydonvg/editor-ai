@@ -7,6 +7,8 @@ import {
   CardTitle,
 } from "../ui/Card";
 import { useAppSelector } from "@/lib/redux/hooks";
+import { Button } from "../ui/Button";
+import { Layers2 } from "lucide-react";
 
 export default function Layers() {
   const isGeneratingImage = useAppSelector((state) => state.image.isGenerating);
@@ -36,8 +38,8 @@ export default function Layers() {
               { "animate-pulse": isGeneratingImage },
             )}
           >
-            <div>
-              <div>
+            <div className="relative flex items-center p-4">
+              <div className="flex h-8 w-full items-center justify-between gap-2">
                 {!layer.url ? (
                   <p className="justify-self-end text-xs font-medium">
                     New Layer
@@ -48,6 +50,12 @@ export default function Layers() {
           </div>
         ))}
       </CardContent>
+      <div className="sticky bottom-0 flex shrink-0 gap-2 bg-card">
+        <Button variant="outline" className="flex w-full gap-2">
+          <span>Create Layer</span>
+          <Layers2 size={18} className="text-secondary-foreground" />
+        </Button>
+      </div>
     </Card>
   );
 }
