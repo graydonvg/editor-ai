@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, generateLayer } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -11,7 +11,6 @@ import { Button } from "../ui/Button";
 import { Layers2 } from "lucide-react";
 import LayerImage from "./LayerImage";
 import LayerInfo from "./LayerInfo";
-import { MouseEvent } from "react";
 import { activeLayerSet, layerAdded } from "@/lib/redux/features/layerSlice";
 
 export default function Layers() {
@@ -27,20 +26,14 @@ export default function Layers() {
   }
 
   function handleCreateLayer() {
-    dispatch(
-      layerAdded({
-        id: crypto.randomUUID(),
-        url: "",
-        height: 0,
-        width: 0,
-        publicId: "",
-      }),
-    );
+    const newLayer = generateLayer();
+
+    dispatch(layerAdded(newLayer));
   }
 
   return (
     <Card className="scrollbar-thin scrollbar-track-secondary scrollbar-thumb-primary scrollbar-thumb-rounded-full scrollbar-track-rounded-full relative flex shrink-0 basis-[320px] flex-col overflow-x-hidden overflow-y-scroll shadow-2xl">
-      <CardHeader className="">
+      <CardHeader className="sticky top-0 z-50 min-h-28 bg-card px-4 py-6 shadow-sm">
         <div>
           <CardTitle className="text-sm">
             {activeLayer.name ?? "Layers"}

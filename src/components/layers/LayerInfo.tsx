@@ -4,8 +4,8 @@ import { Dialog, DialogContent } from "../ui/Dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { Button } from "../ui/Button";
 import { Ellipsis, Trash2 } from "lucide-react";
-import { MouseEvent, MouseEventHandler } from "react";
-import { activeLayerSet } from "@/lib/redux/features/layerSlice";
+import { MouseEvent } from "react";
+import { activeLayerSet, layerRemoved } from "@/lib/redux/features/layerSlice";
 
 type Props = {
   layer: LayerType;
@@ -16,12 +16,16 @@ export default function LayerInfo({ layer, layerIndex }: Props) {
   const dispatch = useAppDispatch();
   const layers = useAppSelector((state) => state.layer.layers);
 
-  function handleDelete(e: MouseEvent<HTMLButtonElement>) {
+  function handleDeleteLayer(
+    e: MouseEvent<HTMLButtonElement>,
+    layerId: string,
+  ) {
     e.stopPropagation();
 
     const activeLayerId = layerIndex === 0 ? layers[1].id : layers[0].id;
 
     dispatch(activeLayerSet(activeLayerId));
+    dispatch(layerRemoved(layerId));
   }
 
   return (
@@ -45,7 +49,10 @@ export default function LayerInfo({ layer, layerIndex }: Props) {
             {layer.height}
           </p>
         </div>
-        <Button onClick={handleDelete} className="flex items-center gap-2">
+        <Button
+          onClick={(e) => handleDeleteLayer(e, layer.id!)}
+          className="flex items-center gap-2"
+        >
           <span>Delete Layer</span>
           <Trash2 size={14} />
         </Button>

@@ -1,4 +1,5 @@
 import { LayerType } from "@/lib/types";
+import { generateLayer } from "@/lib/utils";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 type State = {
@@ -8,13 +9,7 @@ type State = {
   comparedLayers: string[];
 };
 
-const initialLayer = {
-  id: crypto.randomUUID(),
-  url: "",
-  height: 0,
-  width: 0,
-  publicId: "",
-};
+const initialLayer = generateLayer();
 
 const initialState: State = {
   layers: [initialLayer],

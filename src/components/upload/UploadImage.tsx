@@ -36,7 +36,7 @@ export default function UploadImage() {
             url: objectUrl,
             width: 0,
             height: 0,
-            name: "uploading",
+            name: acceptedFiles[0].name,
             publicId: "",
             format: "",
             resourceType: "image",

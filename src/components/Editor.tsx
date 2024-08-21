@@ -1,6 +1,7 @@
 import ActiveImage from "./ActiveImage";
 import Layers from "./layers/Layers";
 import { ModeToggle } from "./ui/ModeToggle";
+import UploadForm from "./upload/UploadForm";
 import UploadImage from "./upload/UploadImage";
 
 export default function Editor() {
@@ -11,7 +12,7 @@ export default function Editor() {
           <ModeToggle />
         </div>
       </div>
-      <UploadImage />
+      <UploadForm />
       <ActiveImage />
       <Layers />
     </div>
