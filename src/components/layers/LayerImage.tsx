@@ -5,7 +5,7 @@ type Props = {
   layer: LayerType;
 };
 
-export default function Layer({ layer }: Props) {
+export default function LayerImage({ layer }: Props) {
   if (layer.url && layer.name) {
     return (
       <div className="flex h-12 w-12 items-center justify-center">

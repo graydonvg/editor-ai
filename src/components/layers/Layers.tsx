@@ -9,6 +9,7 @@ import {
 import { useAppSelector } from "@/lib/redux/hooks";
 import { Button } from "../ui/Button";
 import { Layers2 } from "lucide-react";
+import LayerImage from "./LayerImage";
 
 export default function Layers() {
   const isGeneratingImage = useAppSelector((state) => state.image.isGenerating);
@@ -45,6 +46,7 @@ export default function Layers() {
                     New Layer
                   </p>
                 )}
+                <LayerImage layer={layer} />
               </div>
             </div>
           </div>
