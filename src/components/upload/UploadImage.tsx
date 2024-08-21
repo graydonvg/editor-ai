@@ -6,8 +6,8 @@ import { Card, CardContent } from "../ui/Card";
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import {
-  imageGenerationStarted,
-  imageGenerationStopped,
+  generationStarted,
+  generationStopped,
 } from "@/lib/redux/features/imageSlice";
 import { activeLayerSet, layerUpdated } from "@/lib/redux/features/layerSlice";
 
@@ -29,7 +29,7 @@ export default function UploadImage() {
 
         const objectUrl = URL.createObjectURL(acceptedFiles[0]);
 
-        dispatch(imageGenerationStarted());
+        dispatch(generationStarted());
         dispatch(
           layerUpdated({
             id: activeLayer.id,
@@ -62,7 +62,7 @@ export default function UploadImage() {
           dispatch(activeLayerSet(activeLayer.id));
         }
 
-        dispatch(imageGenerationStopped());
+        dispatch(generationStopped());
       }
     },
   });

@@ -1,7 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { LayerType } from "@/lib/types";
-import { Dialog, DialogContent } from "../ui/Dialog";
-import { DialogTrigger } from "@radix-ui/react-dialog";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/Dialog";
 import { Button } from "../ui/Button";
 import { Ellipsis, Trash2 } from "lucide-react";
 import { MouseEvent } from "react";
@@ -22,7 +21,7 @@ export default function LayerInfo({ layer, layerIndex }: Props) {
   ) {
     e.stopPropagation();
 
-    const activeLayerId = layerIndex === 0 ? layers[1].id : layers[0].id;
+    let activeLayerId = layerIndex === 0 ? layers[1].id : layers[0].id;
 
     dispatch(activeLayerSet(activeLayerId));
     dispatch(layerRemoved(layerId));

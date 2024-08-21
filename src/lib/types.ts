@@ -1,3 +1,8 @@
+export type ActionResult<U, V> = {
+  result?: U;
+  error?: V;
+};
+
 export type LayerType = {
   publicId?: string;
   width?: number;

@@ -12,10 +12,10 @@ const imageSlice = createSlice({
   name: "image",
   initialState,
   reducers: {
-    imageGenerationStarted(state) {
+    generationStarted(state) {
       state.isGenerating = true;
     },
-    imageGenerationStopped(state) {
+    generationStopped(state) {
       state.isGenerating = false;
     },
   },
@@ -23,6 +23,6 @@ const imageSlice = createSlice({
 
 const { actions, reducer } = imageSlice;
 
-export const { imageGenerationStarted, imageGenerationStopped } = actions;
+export const { generationStarted, generationStopped } = actions;
 
 export const imageReducer = reducer;
