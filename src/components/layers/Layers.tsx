@@ -15,12 +15,12 @@ import { activeLayerSet, layerAdded } from "@/lib/redux/features/layerSlice";
 
 export default function Layers() {
   const dispatch = useAppDispatch();
-  const isGeneratingImage = useAppSelector((state) => state.image.isGenerating);
+  const isGenerating = useAppSelector((state) => state.image.isGenerating);
   const layers = useAppSelector((state) => state.layer.layers);
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
 
   function handleSelectLayer(layerId: string) {
-    if (isGeneratingImage) return;
+    if (isGenerating) return;
 
     dispatch(activeLayerSet(layerId));
   }
@@ -53,13 +53,13 @@ export default function Layers() {
             className={cn(
               "cursor-pointer border border-transparent ease-in-out hover:bg-secondary",
               {
-                "animate-pulse": isGeneratingImage,
+                "animate-pulse": isGenerating,
                 "border-primary": layer.id === activeLayer.id,
               },
             )}
           >
             <div className="relative flex items-center p-4">
-              <div className="flex h-8 w-full items-center justify-between gap-2">
+              <div className="flex h-8 w-full items-center justify-between">
                 {!layer.url && (
                   <p className="justify-self-end text-xs font-medium">
                     New Layer

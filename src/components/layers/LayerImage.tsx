@@ -9,20 +9,24 @@ export default function LayerImage({ layer }: Props) {
   return (
     <>
       {layer.url && layer.name ? (
-        <div className="flex h-12 w-12 items-center justify-center">
-          <Image
-            src={
-              layer.format === "mp4" ? layer.posterUrl || layer.url : layer.url
-            }
-            alt={layer.name}
-            className="h-full w-full rounded-sm object-contain"
-            width={50}
-            height={50}
-          />
+        <>
+          <div className="flex h-12 w-12 items-center justify-center">
+            <Image
+              src={
+                layer.format === "mp4"
+                  ? layer.posterUrl || layer.url
+                  : layer.url
+              }
+              alt={layer.name}
+              className="h-full w-full rounded-sm object-contain"
+              width={50}
+              height={50}
+            />
+          </div>
           <div>
             <p className="text-xs">{`${layer.name.slice(0, 15)}.${layer.format}`}</p>
           </div>
-        </div>
+        </>
       ) : null}
     </>
   );

@@ -3,21 +3,21 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 export default function ActiveImage() {
-  const isGeneratingImage = useAppSelector((state) => state.image.isGenerating);
+  const isGenerating = useAppSelector((state) => state.image.isGenerating);
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
 
   if (!activeLayer.url) return null;
 
   return (
-    <div className="relative flex h-svh w-full flex-col items-center justify-center bg-secondary p-24">
-      <div>
+    <div className="h-full w-full bg-secondary p-24">
+      <div className="relative flex h-full w-full items-center justify-center">
         {activeLayer.resourceType === "image" && (
           <Image
             src={activeLayer.url}
             alt={activeLayer.name!}
             fill
             className={cn("rounded-lg object-contain", {
-              "animate-pulse": isGeneratingImage,
+              "animate-pulse": isGenerating,
             })}
           />
         )}
