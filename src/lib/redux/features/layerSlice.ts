@@ -8,17 +8,17 @@ type State = {
   comparedLayers: string[];
 };
 
+const initialLayer = {
+  id: crypto.randomUUID(),
+  url: "",
+  height: 0,
+  width: 0,
+  publicId: "",
+};
+
 const initialState: State = {
-  layers: [
-    {
-      id: crypto.randomUUID(),
-      url: "",
-      height: 0,
-      width: 0,
-      publicId: "",
-    },
-  ],
-  activeLayer: {},
+  layers: [initialLayer],
+  activeLayer: initialLayer,
   layerComparisonMode: false,
   comparedLayers: [],
 };
@@ -40,7 +40,7 @@ const layerSlice = createSlice({
         (layer) => layer.id !== action.payload,
       );
     },
-    activeLayerSelected(state, action: PayloadAction<LayerType["id"]>) {
+    activeLayerSet(state, action: PayloadAction<LayerType["id"]>) {
       state.activeLayer =
         state.layers.find((layer) => layer.id === action.payload) ||
         state.layers[0];
@@ -96,7 +96,7 @@ export const {
   layerAdded,
   layerUpdated,
   layerRemoved,
-  activeLayerSelected,
+  activeLayerSet,
   posterUrlUpdated,
   transcriptionUrlUpdated,
   layerComparisonModeToggled,

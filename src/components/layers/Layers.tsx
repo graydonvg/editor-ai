@@ -40,11 +40,11 @@ export default function Layers() {
           >
             <div className="relative flex items-center p-4">
               <div className="flex h-8 w-full items-center justify-between gap-2">
-                {!layer.url ? (
+                {!layer.url && (
                   <p className="justify-self-end text-xs font-medium">
                     New Layer
                   </p>
-                ) : null}
+                )}
               </div>
             </div>
           </div>
