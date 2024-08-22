@@ -3,14 +3,11 @@
 import { checkImageProcessing } from "@/lib/check-processing";
 import { actionClient } from "@/lib/safe-action";
 import { ActionResult } from "@/lib/types";
-import { v2 as cloudinary } from "cloudinary";
 import { z } from "zod";
+import { Logger } from "next-axiom";
 
-cloudinary.config({
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+const log = new Logger();
+const actionLog = log.with({ context: "actions/gen-remove-action" });
 
 const genRemoveSchema = z.object({
   prompt: z.string(),
@@ -23,6 +20,11 @@ export const genRemoveAction = actionClient
     async ({
       parsedInput: { prompt, activeImageUrl },
     }): Promise<ActionResult<string, string>> => {
+      actionLog.info("Starting genRemoveAction", {
+        prompt,
+        activeImageUrl,
+      });
+
       try {
         const removeUrl = constructRemoveUrl(activeImageUrl, prompt);
 
@@ -30,13 +32,19 @@ export const genRemoveAction = actionClient
 
         return { result: removeUrl };
       } catch (error) {
+        actionLog.error("Error during image processing", {
+          error,
+        });
+
         if (error instanceof Error) {
           return { error: error.message };
         }
-        console.error("Unexpected error:", error);
+
         return {
           error: "An unexpected error occurred while processing the image.",
         };
+      } finally {
+        await log.flush();
       }
     },
   );
@@ -48,23 +56,45 @@ function constructRemoveUrl(activeImageUrl: string, prompt: string) {
     throw new Error("Invalid URL format.");
   }
 
-  return `${baseUrl}/upload/e_gen_remove:${encodeURIComponent(prompt)}/${imagePath}`;
+  const removeUrl = `${baseUrl}/upload/e_gen_remove:${encodeURIComponent(prompt)}/${imagePath}`;
+
+  actionLog.info("Constructed Remove URL", {
+    removeUrl,
+  });
+
+  return removeUrl;
 }
 
 async function waitForImageProcessing(url: string) {
   const maxAttempts = 20;
-  // const initialDelay = 1000;
   const delay = 1000;
+
+  actionLog.info("Starting image processing check", {
+    url,
+    maxAttempts,
+  });
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       const isProcessed = await checkImageProcessing(url);
 
       if (isProcessed) {
+        actionLog.info("Image processed successfully", {
+          attempt,
+          url,
+        });
+
         return;
       }
 
-      // const delay = 1000;
+      if (attempt < maxAttempts) {
+        actionLog.warn("Image not yet processed, retrying...", {
+          attempt,
+          url,
+          nextCheckIn: `${delay / 1000}s`,
+        });
+      }
+
       await sleep(delay);
     } catch (error) {
       if (attempt === maxAttempts) {

@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
+
+import { withAxiom } from "next-axiom";
+
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -10,4 +13,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withAxiom(nextConfig);

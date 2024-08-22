@@ -28,8 +28,6 @@ export default function GenRemove() {
     });
 
     if (res?.data?.result) {
-      console.log(res?.data?.result);
-
       dispatch(
         layerAdded({
           id: newLayerId,
@@ -47,7 +45,7 @@ export default function GenRemove() {
     }
 
     if (res?.data?.error) {
-      console.log(res?.data?.error);
+      console.error(res?.data?.error);
     }
 
     dispatch(generationStopped());
@@ -67,7 +65,7 @@ export default function GenRemove() {
           <h3>Remove Object</h3>
           <p>
             Specify the object you want to remove by using a short prompt like:
-            tree, couch, etc.
+            tree, chair, etc.
           </p>
         </div>
         <div className="grid grid-cols-3 items-center gap-4">
@@ -81,7 +79,7 @@ export default function GenRemove() {
           />
         </div>
         <Button onClick={handleRemove} className="mt-4 w-full">
-          Magic Remove
+          Remove
         </Button>
       </PopoverContent>
     </Popover>

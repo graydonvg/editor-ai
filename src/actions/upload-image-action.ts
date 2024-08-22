@@ -1,19 +1,10 @@
 "use server";
 
+import cloudinary from "@/lib/cloudinary";
 import { actionClient } from "@/lib/safe-action";
 import { ActionResult } from "@/lib/types";
-import {
-  v2 as cloudinary,
-  UploadApiErrorResponse,
-  UploadApiResponse,
-} from "cloudinary";
+import { UploadApiErrorResponse, UploadApiResponse } from "cloudinary";
 import { z } from "zod";
-
-cloudinary.config({
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 const formDataSchema = z.object({
   image: z.instanceof(FormData),
