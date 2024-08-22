@@ -14,3 +14,7 @@ export function generateLayer() {
     publicId: "",
   };
 }
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

@@ -1,10 +1,11 @@
 "use server";
 
-import { checkImageProcessing } from "@/lib/check-processing";
+import { checkImageProcessing } from "@/lib/processing/check-processing";
 import { actionClient } from "@/lib/safe-action";
 import { ActionResult } from "@/lib/types";
 import { z } from "zod";
 import { Logger } from "next-axiom";
+import { waitForImageProcessing } from "@/lib/processing/wait-for-processing";
 
 const log = new Logger();
 const actionLog = log.with({ context: "actions/bg-remove-action" });
@@ -28,7 +29,7 @@ export const bgRemoveAction = actionClient
       try {
         const bgRemoveUrl = constructUrl(activeImageUrl, format);
 
-        await waitForImageProcessing(bgRemoveUrl);
+        await waitForImageProcessing(bgRemoveUrl, actionLog);
 
         return { result: bgRemoveUrl };
       } catch (error) {
@@ -65,51 +66,4 @@ function constructUrl(activeImageUrl: string, format: string) {
   });
 
   return bgRemoveUrl;
-}
-
-async function waitForImageProcessing(url: string) {
-  const maxAttempts = 20;
-  const delay = 1000;
-
-  actionLog.info("Starting image processing check", {
-    url,
-    maxAttempts,
-  });
-
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    try {
-      const isProcessed = await checkImageProcessing(url);
-
-      if (isProcessed) {
-        actionLog.info("Image processed successfully", {
-          attempt,
-          url,
-        });
-
-        return;
-      }
-
-      if (attempt < maxAttempts) {
-        actionLog.warn("Image not yet processed, retrying...", {
-          attempt,
-          url,
-          nextCheckIn: `${delay / 1000}s`,
-        });
-      }
-
-      await sleep(delay);
-    } catch (error) {
-      throw new Error(
-        "An unexpected error occurred during image processing check",
-      );
-    }
-
-    if (attempt === maxAttempts) {
-      throw new Error("Image processing failed after multiple attempts");
-    }
-  }
-}
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
