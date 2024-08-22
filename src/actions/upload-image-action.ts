@@ -5,6 +5,10 @@ import { actionClient } from "@/lib/safe-action";
 import { ActionResult } from "@/lib/types";
 import { UploadApiErrorResponse, UploadApiResponse } from "cloudinary";
 import { z } from "zod";
+import { Logger } from "next-axiom";
+
+const log = new Logger();
+const actionLog = log.with({ context: "actions/upload-image-action" });
 
 const formDataSchema = z.object({
   image: z.instanceof(FormData),
@@ -18,15 +22,29 @@ export const uploadImageAction = actionClient
     }): Promise<
       ActionResult<UploadApiResponse, UploadApiErrorResponse | string>
     > => {
+      actionLog.info("Starting uploadImageAction");
+
       const formImage = image.get("image");
 
-      if (!formImage || !image) return { error: "No image provided" };
+      if (!formImage || !image) {
+        const messgae = "No image provided";
+
+        actionLog.warn(messgae);
+
+        return { error: messgae };
+      }
 
       const file = formImage as File;
 
       try {
+        actionLog.info("Converting image file to buffer", {
+          fileName: file.name,
+        });
+
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
+
+        actionLog.info("Uploading image", { fileName: file.name });
 
         return new Promise((resolve, reject) => {
           cloudinary.uploader
@@ -36,23 +54,36 @@ export const uploadImageAction = actionClient
               },
               function (error, result) {
                 if (error) {
-                  reject({ error });
+                  actionLog.error("Error during upload", {
+                    error,
+                  });
+
+                  reject({ error: error.message });
                   return;
                 }
 
                 if (result) {
+                  actionLog.info("Image uploaded successfully", {
+                    publicId: result.public_id,
+                  });
+
                   resolve({ result });
-                } else {
-                  reject({ error: "Unknown error occurred" });
                 }
               },
             )
             .end(buffer);
         });
       } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : "Unknown error occurred";
-        return { error: errorMessage };
+        const message =
+          "An unexpected error occurred during image upload process";
+
+        actionLog.error(message, {
+          error,
+        });
+
+        return { error: message };
+      } finally {
+        await log.flush();
       }
     },
   );

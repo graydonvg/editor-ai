@@ -41,7 +41,7 @@ export const genRemoveAction = actionClient
         }
 
         return {
-          error: "An unexpected error occurred while processing the image.",
+          error: "An unexpected error occurred while processing the image",
         };
       } finally {
         await log.flush();
@@ -53,7 +53,7 @@ function constructRemoveUrl(activeImageUrl: string, prompt: string) {
   const [baseUrl, imagePath] = activeImageUrl.split("/upload/");
 
   if (!baseUrl || !imagePath) {
-    throw new Error("Invalid URL format.");
+    throw new Error("Invalid URL format");
   }
 
   const removeUrl = `${baseUrl}/upload/e_gen_remove:${encodeURIComponent(prompt)}/${imagePath}`;
@@ -98,12 +98,12 @@ async function waitForImageProcessing(url: string) {
       await sleep(delay);
     } catch (error) {
       if (attempt === maxAttempts) {
-        throw new Error("Image processing failed after multiple attempts.");
+        throw new Error("Image processing failed after multiple attempts");
       }
     }
   }
 
-  throw new Error("Image processing timed out.");
+  throw new Error("Image processing timed out");
 }
 
 function sleep(ms: number) {
