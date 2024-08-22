@@ -7,30 +7,30 @@ import { z } from "zod";
 import { Logger } from "next-axiom";
 
 const log = new Logger();
-const actionLog = log.with({ context: "actions/gen-remove-action" });
+const actionLog = log.with({ context: "actions/bg-remove-action" });
 
-const genRemoveSchema = z.object({
-  prompt: z.string(),
+const bgRemoveSchema = z.object({
   activeImageUrl: z.string(),
+  format: z.string(),
 });
 
-export const genRemoveAction = actionClient
-  .schema(genRemoveSchema)
+export const bgRemoveAction = actionClient
+  .schema(bgRemoveSchema)
   .action(
     async ({
-      parsedInput: { prompt, activeImageUrl },
+      parsedInput: { activeImageUrl, format },
     }): Promise<ActionResult<string, string>> => {
-      actionLog.info("Starting genRemoveAction", {
-        prompt,
+      actionLog.info("Starting bgRemoveAction", {
         activeImageUrl,
+        format,
       });
 
       try {
-        const genRemoveUrl = constructUrl(activeImageUrl, prompt);
+        const bgRemoveUrl = constructUrl(activeImageUrl, format);
 
-        await waitForImageProcessing(genRemoveUrl);
+        await waitForImageProcessing(bgRemoveUrl);
 
-        return { result: genRemoveUrl };
+        return { result: bgRemoveUrl };
       } catch (error) {
         actionLog.error("Error during image processing", {
           error,
@@ -49,20 +49,22 @@ export const genRemoveAction = actionClient
     },
   );
 
-function constructUrl(activeImageUrl: string, prompt: string) {
-  const [baseUrl, imagePath] = activeImageUrl.split("/upload/");
+function constructUrl(activeImageUrl: string, format: string) {
+  const urlParts = activeImageUrl.split(format);
+  const pngConvert = urlParts[0] + "png";
+  const [baseUrl, imagePath] = pngConvert.split("/upload/");
 
   if (!baseUrl || !imagePath) {
     throw new Error("Invalid URL format");
   }
 
-  const genRemoveUrl = `${baseUrl}/upload/e_gen_remove:${encodeURIComponent(prompt)}/${imagePath}`;
+  const bgRemoveUrl = `${baseUrl}/upload/e_background_removal/${imagePath}`;
 
   actionLog.info("Constructed URL successfully", {
-    genRemoveUrl,
+    bgRemoveUrl,
   });
 
-  return genRemoveUrl;
+  return bgRemoveUrl;
 }
 
 async function waitForImageProcessing(url: string) {

@@ -29,6 +29,8 @@ export default function Layers() {
     const newLayer = generateLayer();
 
     dispatch(layerAdded(newLayer));
+
+    dispatch(activeLayerSet(newLayer.id));
   }
 
   return (

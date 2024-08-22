@@ -1,31 +1,27 @@
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
 import { Button } from "../ui/Button";
-import { Eraser } from "lucide-react";
-import { Label } from "../ui/Label";
-import { Input } from "../ui/Input";
-import { useState } from "react";
+import { Image } from "lucide-react";
 import { activeLayerSet, layerAdded } from "@/lib/redux/features/layerSlice";
 import {
   generationStarted,
   generationStopped,
 } from "@/lib/redux/features/imageSlice";
-import { genRemoveAction } from "@/actions/gen-remove-action";
+import { bgRemoveAction } from "@/actions/bg-remove-action";
 
-export default function GenRemove() {
+export default function BgRemove() {
   const dispatch = useAppDispatch();
   const isGenerating = useAppSelector((state) => state.image.isGenerating);
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
-  const [activeTag, setActiveTag] = useState("");
 
   async function handleRemove() {
     const newLayerId = crypto.randomUUID();
 
     dispatch(generationStarted());
 
-    const res = await genRemoveAction({
-      prompt: activeTag,
+    const res = await bgRemoveAction({
       activeImageUrl: activeLayer.url!,
+      format: activeLayer.format!,
     });
 
     if (res?.data?.result) {
@@ -34,7 +30,7 @@ export default function GenRemove() {
           id: newLayerId,
           url: res?.data?.result,
           name: activeLayer.name,
-          format: "png",
+          format: activeLayer.format,
           height: activeLayer.height,
           width: activeLayer.width,
           publicId: activeLayer.publicId,
@@ -57,34 +53,22 @@ export default function GenRemove() {
       <PopoverTrigger disabled={!activeLayer.url} asChild>
         <Button variant="outline" className="p-8">
           <span className="flex flex-col items-center justify-center gap-1 text-xs font-medium">
-            Generative Remove <Eraser size={20} />
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
+            Background Removal <Image size={20} aria-hidden="true" />
           </span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="ml-4 w-full max-w-[400px]">
         <div>
-          <h3>Generative Remove</h3>
-          <p>
-            Specify the object you want to remove by using a short prompt like:
-            tree, chair, etc.
-          </p>
-        </div>
-        <div className="grid grid-cols-3 items-center gap-4">
-          <Label htmlFor="selection">Selection</Label>
-          <Input
-            name="selection"
-            value={activeTag}
-            onChange={(e) => setActiveTag(e.target.value)}
-            className="col-span-2 h-8"
-            placeholder="Enter 1 object at a time..."
-          />
+          <h3>Remove Background</h3>
+          <p>Remove the background of an image with one simple click.</p>
         </div>
         <Button
-          disabled={!activeLayer.url || !activeTag || isGenerating}
+          disabled={!activeLayer.url || isGenerating}
           onClick={handleRemove}
           className="mt-4 w-full"
         >
-          {isGenerating ? "Removing..." : "Remove Object"}
+          {isGenerating ? "Removing..." : "Remove Background"}
         </Button>
       </PopoverContent>
     </Popover>
