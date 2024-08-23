@@ -1,3 +1,4 @@
+import { useAppSelector } from "@/lib/redux/hooks";
 import { LayerType } from "@/lib/types";
 import Image from "next/image";
 import {
@@ -5,35 +6,41 @@ import {
   ReactCompareSlider,
 } from "react-compare-slider";
 
-type Props = {
-  layers: LayerType[];
-};
-// background_removal
+export default function ImageComparison() {
+  const layers = useAppSelector((state) => state.layer.layers);
+  const comparedLayers = useAppSelector((state) => state.layer.comparedLayers);
+  const comparisonLayers = comparedLayers
+    .map((id) => layers.find((layer) => layer.id === id))
+    .filter(Boolean) as LayerType[];
 
-export default function ImageComparison({ layers }: Props) {
-  if (layers.length === 0) {
+  if (comparisonLayers.length === 0) {
     return <p>No layers selected for comparison</p>;
   }
 
-  if (layers.length === 1) {
+  if (comparisonLayers.length === 1) {
     return (
       <div className="overflow-hidden">
         <ReactCompareSliderImage
-          src={layers[0].url!}
-          srcSet={layers[0].url}
-          alt={layers[0].name || "Single image"}
+          src={comparisonLayers[0].url!}
+          srcSet={comparisonLayers[0].url}
+          alt={comparisonLayers[0].name || "Single image"}
           className="object-contain"
         />
       </div>
     );
   }
 
-  let sortedLayers = layers;
+  let layersToCompare = comparisonLayers;
+  const includesBgRemoved = comparisonLayers.some((layer) =>
+    layer.url?.includes("background_removal"),
+  );
 
-  if (layers.length === 2) {
-    sortedLayers = layers.sort((a, b) => {
+  if (includesBgRemoved) {
+    // Image with bg removed must come first otherwise the bg from the other image will show
+    layersToCompare = comparisonLayers.sort((a, b) => {
       const aHasBgRemoved = a.url?.includes("background_removal") ? -1 : 1;
       const bHasBgRemoved = b.url?.includes("background_removal") ? -1 : 1;
+
       return aHasBgRemoved - bHasBgRemoved;
     });
   }
@@ -42,19 +49,19 @@ export default function ImageComparison({ layers }: Props) {
     <ReactCompareSlider
       itemOne={
         <ReactCompareSliderImage
-          key={sortedLayers[0].url}
-          src={sortedLayers[0].url}
-          srcSet={sortedLayers[0].url}
-          alt={sortedLayers[0].name || "Image one"}
+          key={layersToCompare[0].url}
+          src={layersToCompare[0].url}
+          srcSet={layersToCompare[0].url}
+          alt={layersToCompare[0].name || "Image one"}
           className="object-contain"
         />
       }
       itemTwo={
         <ReactCompareSliderImage
-          key={sortedLayers[1].url}
-          src={sortedLayers[1].url}
-          srcSet={sortedLayers[1].url}
-          alt={sortedLayers[1].name || "Image two"}
+          key={layersToCompare[1].url}
+          src={layersToCompare[1].url}
+          srcSet={layersToCompare[1].url}
+          alt={layersToCompare[1].name || "Image two"}
           className="object-contain"
         />
       }

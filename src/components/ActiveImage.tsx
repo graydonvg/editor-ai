@@ -6,7 +6,6 @@ import ImageComparison from "./layers/ImageComparison";
 
 export default function ActiveImage() {
   const isGenerating = useAppSelector((state) => state.image.isGenerating);
-  const layers = useAppSelector((state) => state.layer.layers);
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
   const layerComparisonMode = useAppSelector(
     (state) => state.layer.layerComparisonMode,
@@ -16,13 +15,9 @@ export default function ActiveImage() {
   if (!activeLayer.url && comparedLayers.length === 0) return null;
 
   if (layerComparisonMode && comparedLayers.length > 0) {
-    const comparisonLayers = comparedLayers
-      .map((id) => layers.find((layer) => layer.id === id))
-      .filter(Boolean) as LayerType[];
-
     return (
       <div className="relative flex h-full w-full flex-col items-center justify-center bg-secondary p-24">
-        <ImageComparison layers={comparisonLayers} />
+        <ImageComparison />
       </div>
     );
   }
@@ -34,8 +29,10 @@ export default function ActiveImage() {
           <Image
             src={activeLayer.url!}
             alt={activeLayer.name!}
+            priority
             fill
-            className={cn("object-contain", {
+            sizes="calc(100vw - 792px)"
+            className={cn("rounded-lg object-contain", {
               "animate-pulse": isGenerating,
             })}
           />

@@ -31,10 +31,10 @@ export default function Layers() {
   );
   const comparedLayers = useAppSelector((state) => state.layer.comparedLayers);
 
-  const getLayerName = useMemo(
+  const getLayerUrl = useMemo(
     () => (id: string) => {
       const layer = layers.find((layer) => layer.id === id);
-      return layer ? layer.url : "Nothing here";
+      return layer ? layer.url : null;
     },
     [layers],
   );
@@ -82,7 +82,7 @@ export default function Layers() {
             <CardTitle className="text-sm">Comparing...</CardTitle>
             <CardDescription className="flex items-center gap-2">
               <Image
-                src={getLayerName(comparedLayers[0] as string) ?? ""}
+                src={getLayerUrl(comparedLayers[0] as string) ?? ""}
                 alt="compare"
                 width={32}
                 height={32}
@@ -90,13 +90,13 @@ export default function Layers() {
               {comparedLayers.length > 0 && <ArrowRight />}
               {comparedLayers.length > 1 ? (
                 <Image
-                  src={getLayerName(comparedLayers[1] as string) ?? ""}
+                  src={getLayerUrl(comparedLayers[1] as string) ?? ""}
                   alt="compare"
                   width={32}
                   height={32}
                 />
               ) : (
-                "Nothing here"
+                "Select layer to compare"
               )}
             </CardDescription>
           </div>
