@@ -10,6 +10,8 @@ import {
   generationStopped,
 } from "@/lib/redux/features/imageSlice";
 import { activeLayerSet, layerUpdated } from "@/lib/redux/features/layerSlice";
+import { Flip, toast } from "react-toastify";
+import { handleToastUpdate } from "../ui/Toast";
 
 export default function UploadImage() {
   const dispatch = useAppDispatch();
@@ -24,6 +26,8 @@ export default function UploadImage() {
     },
     onDrop: async (acceptedFiles, fileRejections) => {
       if (acceptedFiles.length) {
+        const toastId = toast.loading("Uploading...");
+
         const formData = new FormData();
         formData.append("image", acceptedFiles[0]);
 
@@ -47,6 +51,8 @@ export default function UploadImage() {
         const res = await uploadImageAction({ image: formData });
 
         if (res?.data?.result) {
+          handleToastUpdate(toastId, "Upload successful", "success");
+
           dispatch(
             layerUpdated({
               id: activeLayer.id,
@@ -59,7 +65,12 @@ export default function UploadImage() {
               resourceType: res.data.result.resource_type,
             }),
           );
+
           dispatch(activeLayerSet(activeLayer.id));
+        }
+
+        if (res?.data?.error) {
+          handleToastUpdate(toastId, res.data.error, "error");
         }
 
         dispatch(generationStopped());

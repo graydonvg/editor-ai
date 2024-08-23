@@ -34,13 +34,13 @@ export async function waitForImageProcessing(url: string, actionLog: Logger) {
 
       await sleep(delay);
     } catch (error) {
-      throw new Error(
-        "An unexpected error occurred during image processing check",
-      );
+      throw new Error("An unexpected error occurred during image processing");
     }
 
     if (attempt === maxAttempts) {
-      throw new Error("Image processing failed after multiple attempts");
+      throw new Error(
+        "Image processing failed after multiple attempts. Please try again later.",
+      );
     }
   }
 }

@@ -11,6 +11,8 @@ import {
   generationStopped,
 } from "@/lib/redux/features/imageSlice";
 import { genRemoveAction } from "@/actions/gen-remove-action";
+import { toast } from "react-toastify";
+import { handleToastUpdate } from "../ui/Toast";
 
 export default function GenRemove() {
   const dispatch = useAppDispatch();
@@ -19,6 +21,8 @@ export default function GenRemove() {
   const [activeTag, setActiveTag] = useState("");
 
   async function handleRemove() {
+    const toastId = toast.loading(`Removing ${activeTag}...`);
+
     const newLayerId = crypto.randomUUID();
 
     dispatch(generationStarted());
@@ -29,6 +33,12 @@ export default function GenRemove() {
     });
 
     if (res?.data?.result) {
+      handleToastUpdate(
+        toastId,
+        `${activeTag} removed successfully`,
+        "success",
+      );
+
       dispatch(
         layerAdded({
           id: newLayerId,
@@ -46,7 +56,7 @@ export default function GenRemove() {
     }
 
     if (res?.data?.error) {
-      console.error(res?.data?.error);
+      handleToastUpdate(toastId, res.data.error, "error");
     }
 
     dispatch(generationStopped());

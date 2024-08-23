@@ -8,6 +8,8 @@ import {
   generationStopped,
 } from "@/lib/redux/features/imageSlice";
 import { bgRemoveAction } from "@/actions/bg-remove-action";
+import { toast } from "react-toastify";
+import { handleToastUpdate } from "../ui/Toast";
 
 export default function BgRemove() {
   const dispatch = useAppDispatch();
@@ -15,6 +17,8 @@ export default function BgRemove() {
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
 
   async function handleRemove() {
+    const toastId = toast.loading("Removing background...");
+
     const newLayerId = crypto.randomUUID();
 
     dispatch(generationStarted());
@@ -25,6 +29,8 @@ export default function BgRemove() {
     });
 
     if (res?.data?.result) {
+      handleToastUpdate(toastId, "Background removed successfully", "success");
+
       dispatch(
         layerAdded({
           id: newLayerId,
@@ -42,7 +48,7 @@ export default function BgRemove() {
     }
 
     if (res?.data?.error) {
-      console.error(res?.data?.error);
+      handleToastUpdate(toastId, res.data.error, "error");
     }
 
     dispatch(generationStopped());

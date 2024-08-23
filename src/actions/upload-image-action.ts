@@ -6,6 +6,7 @@ import { ActionResult } from "@/lib/types";
 import { UploadApiErrorResponse, UploadApiResponse } from "cloudinary";
 import { z } from "zod";
 import { Logger } from "next-axiom";
+import { sleep } from "@/lib/utils";
 
 const log = new Logger();
 const actionLog = log.with({ context: "actions/upload-image-action" });
@@ -19,9 +20,7 @@ export const uploadImageAction = actionClient
   .action(
     async ({
       parsedInput: { image },
-    }): Promise<
-      ActionResult<UploadApiResponse, UploadApiErrorResponse | string>
-    > => {
+    }): Promise<ActionResult<UploadApiResponse, string>> => {
       actionLog.info("Starting uploadImageAction");
 
       const formImage = image.get("image");

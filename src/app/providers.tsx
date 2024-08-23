@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { ReactNode } from "react";
 import { PersistGate } from "redux-persist/integration/react";
 import { ThemeProvider } from "next-themes";
+import Toast from "@/components/ui/Toast";
 
 type Props = {
   children: ReactNode;
@@ -21,6 +22,7 @@ export function Providers({ children }: Props) {
           disableTransitionOnChange
         >
           {children}
+          <Toast />
         </ThemeProvider>
       </PersistGate>
     </Provider>
