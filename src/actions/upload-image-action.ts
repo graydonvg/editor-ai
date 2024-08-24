@@ -3,10 +3,9 @@
 import cloudinary from "@/lib/cloudinary";
 import { actionClient } from "@/lib/safe-action";
 import { ActionResult } from "@/lib/types";
-import { UploadApiErrorResponse, UploadApiResponse } from "cloudinary";
+import { UploadApiResponse } from "cloudinary";
 import { z } from "zod";
 import { Logger } from "next-axiom";
-import { sleep } from "@/lib/utils";
 
 const log = new Logger();
 const actionLog = log.with({ context: "actions/upload-image-action" });

@@ -7,30 +7,30 @@ import { Logger } from "next-axiom";
 import { waitForImageProcessing } from "@/lib/processing/wait-for-processing";
 
 const log = new Logger();
-const actionLog = log.with({ context: "actions/bg-remove-action" });
+const actionLog = log.with({ context: "actions/bg-replace-action" });
 
-const bgRemoveSchema = z.object({
+const bgReplaceSchema = z.object({
   activeImageUrl: z.string(),
-  format: z.string(),
+  prompt: z.string(),
 });
 
-export const bgRemoveAction = actionClient
-  .schema(bgRemoveSchema)
+export const bgReplaceAction = actionClient
+  .schema(bgReplaceSchema)
   .action(
     async ({
-      parsedInput: { activeImageUrl, format },
+      parsedInput: { activeImageUrl, prompt },
     }): Promise<ActionResult<string, string>> => {
-      actionLog.info("Starting bgRemoveAction", {
+      actionLog.info("Starting bgReplaceAction", {
         activeImageUrl,
-        format,
+        prompt,
       });
 
       try {
-        const bgRemoveUrl = constructUrl(activeImageUrl, format);
+        const bgReplaceUrl = constructUrl(activeImageUrl, prompt);
 
-        await waitForImageProcessing(bgRemoveUrl, actionLog);
+        await waitForImageProcessing(bgReplaceUrl, actionLog);
 
-        return { result: bgRemoveUrl };
+        return { result: bgReplaceUrl };
       } catch (error) {
         actionLog.error("Error during image processing", {
           error,
@@ -49,20 +49,20 @@ export const bgRemoveAction = actionClient
     },
   );
 
-function constructUrl(activeImageUrl: string, format: string) {
-  const urlParts = activeImageUrl.split(format);
-  const pngConvert = urlParts[0] + "png";
-  const [baseUrl, imagePath] = pngConvert.split("/upload/");
+function constructUrl(activeImageUrl: string, prompt: string) {
+  const [baseUrl, imagePath] = activeImageUrl.split("/upload/");
 
   if (!baseUrl || !imagePath) {
     throw new Error("Invalid URL format");
   }
 
-  const bgRemoveUrl = `${baseUrl}/upload/e_background_removal/${imagePath}`;
+  const bgReplaceUrl = prompt
+    ? `${baseUrl}/upload/e_gen_background_replace:prompt_${prompt}/${imagePath}`
+    : `${baseUrl}/upload/e_gen_background_replace/${imagePath}`;
 
   actionLog.info("Constructed URL successfully", {
-    bgRemoveUrl,
+    bgReplaceUrl,
   });
 
-  return bgRemoveUrl;
+  return bgReplaceUrl;
 }

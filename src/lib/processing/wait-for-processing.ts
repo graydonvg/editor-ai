@@ -3,8 +3,8 @@ import { checkImageProcessing } from "./check-processing";
 import { sleep } from "../utils";
 
 export async function waitForImageProcessing(url: string, actionLog: Logger) {
-  const maxAttempts = 20;
-  const delay = 1000;
+  const maxAttempts = 5;
+  const initialDelay = 1000;
 
   actionLog.info("Starting image processing check", {
     url,
@@ -25,14 +25,16 @@ export async function waitForImageProcessing(url: string, actionLog: Logger) {
       }
 
       if (attempt < maxAttempts) {
+        const delay = initialDelay * Math.pow(2, attempt - 1);
+
         actionLog.warn("Image not yet processed, retrying...", {
           attempt,
           url,
           nextCheckIn: `${delay / 1000}s`,
         });
-      }
 
-      await sleep(delay);
+        await sleep(delay);
+      }
     } catch (error) {
       throw new Error("An unexpected error occurred during image processing");
     }

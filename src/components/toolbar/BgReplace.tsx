@@ -1,54 +1,49 @@
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
 import { Button } from "../ui/Button";
-import { Eraser } from "lucide-react";
-import { Label } from "../ui/Label";
-import { Input } from "../ui/Input";
-import { useState } from "react";
+import { Image } from "lucide-react";
 import { activeLayerSet, layerAdded } from "@/lib/redux/features/layerSlice";
 import {
   generationStarted,
   generationStopped,
 } from "@/lib/redux/features/imageSlice";
-import { genRemoveAction } from "@/actions/gen-remove-action";
 import { toast } from "react-toastify";
 import { handleToastUpdate } from "../ui/Toast";
+import { bgReplaceAction } from "@/actions/bg-replace-action";
+import { Label } from "../ui/Label";
+import { Input } from "../ui/Input";
+import { useState } from "react";
 
-export default function GenRemove() {
+export default function BgReplace() {
   const dispatch = useAppDispatch();
   const isGenerating = useAppSelector((state) => state.image.isGenerating);
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
-  const [activeTag, setActiveTag] = useState("");
+  const [prompt, setPrompt] = useState("");
 
   async function handleRemove() {
-    const toastId = toast.loading(`Removing ${activeTag}...`);
+    dispatch(generationStarted());
+    const toastId = toast.loading("Replacing background...");
+
+    const res = await bgReplaceAction({
+      activeImageUrl: activeLayer.url!,
+      prompt: activeLayer.format!,
+    });
 
     const newLayerId = crypto.randomUUID();
 
-    dispatch(generationStarted());
-
-    const res = await genRemoveAction({
-      prompt: activeTag,
-      activeImageUrl: activeLayer.url!,
-    });
-
     if (res?.data?.result) {
-      handleToastUpdate(
-        toastId,
-        `${activeTag} removed successfully`,
-        "success",
-      );
+      handleToastUpdate(toastId, "Background replaced successfully", "success");
 
       dispatch(
         layerAdded({
           id: newLayerId,
           url: res?.data?.result,
-          name: activeLayer.name,
-          format: "png",
+          name: "bg-replaced-" + activeLayer.name,
+          format: activeLayer.format,
           height: activeLayer.height,
           width: activeLayer.width,
           publicId: activeLayer.publicId,
-          resourceType: activeLayer.resourceType,
+          resourceType: "image",
         }),
       );
 
@@ -67,34 +62,35 @@ export default function GenRemove() {
       <PopoverTrigger disabled={!activeLayer.url} asChild>
         <Button variant="outline" className="p-8">
           <span className="flex flex-col items-center justify-center gap-1 text-xs font-medium">
-            Generative Remove <Eraser size={20} />
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
+            Background Replace <Image size={20} aria-hidden="true" />
           </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="ml-4 w-full max-w-[400px]">
-        <div>
-          <h3>Generative Remove</h3>
-          <p>
-            Specify the object you want to remove by using a short prompt like:
-            tree, chair, etc.
-          </p>
-        </div>
-        <div className="grid grid-cols-3 items-center gap-4">
-          <Label htmlFor="selection">Selection</Label>
+      <PopoverContent className="ml-4 w-full max-w-sm space-y-4">
+        <h3 className="font-medium leading-none">
+          Generative Background Replace
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          Replace the background of an image with AI-generated content.
+        </p>
+        <div className="flex items-center gap-2">
+          <Label htmlFor="prompt">Prompt:</Label>
           <Input
-            name="selection"
-            value={activeTag}
-            onChange={(e) => setActiveTag(e.target.value)}
+            name="prompt"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            disabled={isGenerating}
             className="col-span-2 h-8"
-            placeholder="Enter 1 object at a time..."
+            placeholder="Describe the new background..."
           />
         </div>
         <Button
-          disabled={!activeLayer.url || !activeTag || isGenerating}
+          disabled={!activeLayer.url || isGenerating}
           onClick={handleRemove}
-          className="mt-4 w-full"
+          className="w-full"
         >
-          {isGenerating ? "Removing..." : "Remove Object"}
+          {isGenerating ? "Replacing..." : "Replace Background"}
         </Button>
       </PopoverContent>
     </Popover>

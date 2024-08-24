@@ -1,3 +1,5 @@
+"use client";
+
 import { useAppSelector } from "@/lib/redux/hooks";
 import ActiveImage from "./ActiveImage";
 import Layers from "./layers/Layers";

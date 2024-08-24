@@ -1,11 +1,13 @@
 import BgRemove from "./BgRemove";
-import GenRemove from "./GenRemove";
+import BgReplace from "./BgReplace";
+import ObjectRemove from "./ObjectRemove";
 
 export default function ImageToolbar() {
   return (
     <>
-      <GenRemove />
+      <ObjectRemove />
       <BgRemove />
+      <BgReplace />
     </>
   );
 }
