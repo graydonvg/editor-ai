@@ -1,5 +1,4 @@
 import { useAppSelector } from "@/lib/redux/hooks";
-import { LayerType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import ImageComparison from "./layers/ImageComparison";

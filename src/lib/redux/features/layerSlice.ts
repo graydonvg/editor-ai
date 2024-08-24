@@ -35,6 +35,9 @@ const layerSlice = createSlice({
         (layer) => layer.id !== action.payload,
       );
     },
+    layersReordered(state, action: PayloadAction<LayerType[]>) {
+      state.layers = action.payload;
+    },
     activeLayerSet(state, action: PayloadAction<LayerType["id"]>) {
       state.activeLayer =
         state.layers.find((layer) => layer.id === action.payload) ||
@@ -73,7 +76,10 @@ const layerSlice = createSlice({
       state.comparedLayers = action.payload;
       state.layerComparisonMode = action.payload.length > 0;
     },
-    comparedLayersToggled(state, action: PayloadAction<{ id: string }>) {
+    comparedLayersCleared(state) {
+      state.comparedLayers = [];
+    },
+    layerToCompareSelected(state, action: PayloadAction<{ id: string }>) {
       const newComparedLayers = state.comparedLayers.includes(action.payload.id)
         ? state.comparedLayers.filter(
             (layerId) => layerId !== action.payload.id,
@@ -91,12 +97,14 @@ export const {
   layerAdded,
   layerUpdated,
   layerRemoved,
+  layersReordered,
   activeLayerSet,
   posterUrlUpdated,
   transcriptionUrlUpdated,
   layerComparisonModeToggled,
   comparedLayersUpdated,
-  comparedLayersToggled,
+  comparedLayersCleared,
+  layerToCompareSelected,
 } = actions;
 
 export const layerReducer = reducer;

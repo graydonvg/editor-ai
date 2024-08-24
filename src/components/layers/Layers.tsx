@@ -1,4 +1,4 @@
-import { cn, generateLayer } from "@/lib/utils";
+import { generateLayer } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -9,21 +9,27 @@ import {
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { Button } from "../ui/Button";
 import { ArrowRight, Images, Layers2 } from "lucide-react";
-import LayerImage from "./LayerImage";
-import LayerInfo from "./LayerInfo";
 import {
   activeLayerSet,
-  comparedLayersToggled,
+  comparedLayersCleared,
   comparedLayersUpdated,
   layerAdded,
   layerComparisonModeToggled,
+  layersReordered,
 } from "@/lib/redux/features/layerSlice";
 import { useMemo } from "react";
 import Image from "next/image";
+import { DndContext, DragEndEvent, closestCenter } from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import Layer from "./Layer";
 
 export default function Layers() {
   const dispatch = useAppDispatch();
-  const isGenerating = useAppSelector((state) => state.image.isGenerating);
   const layers = useAppSelector((state) => state.layer.layers);
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
   const layerComparisonMode = useAppSelector(
@@ -48,16 +54,6 @@ export default function Layers() {
     [layers, layerComparisonMode],
   );
 
-  function handleSelectLayer(layerId: string) {
-    if (isGenerating) return;
-
-    if (layerComparisonMode) {
-      dispatch(comparedLayersToggled({ id: layerId }));
-    } else {
-      dispatch(activeLayerSet(layerId));
-    }
-  }
-
   function handleCreateLayer() {
     const newLayer = generateLayer();
 
@@ -67,10 +63,24 @@ export default function Layers() {
   }
 
   function handleCompareLayers(layerId: string) {
-    if (layerComparisonMode) {
-      dispatch(layerComparisonModeToggled());
-    } else {
+    if (!layerComparisonMode) {
       dispatch(comparedLayersUpdated([layerId]));
+    } else {
+      dispatch(layerComparisonModeToggled());
+      dispatch(comparedLayersCleared());
+    }
+  }
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      const oldIndex = layers.findIndex((layer) => layer.id === active.id);
+      const newIndex = layers.findIndex((layer) => layer.id === over?.id);
+
+      const updatedLayers = arrayMove(layers, oldIndex, newIndex);
+
+      dispatch(layersReordered(updatedLayers));
     }
   }
 
@@ -79,7 +89,7 @@ export default function Layers() {
       <CardHeader className="sticky top-0 z-50 min-h-28 bg-card px-4 py-6 shadow-sm">
         {layerComparisonMode ? (
           <div>
-            <CardTitle className="text-sm">Comparing...</CardTitle>
+            <CardTitle className="pb-2 text-sm">Comparing...</CardTitle>
             <CardDescription className="flex items-center gap-2">
               <Image
                 src={getLayerUrl(comparedLayers[0] as string) ?? ""}
@@ -102,9 +112,9 @@ export default function Layers() {
           </div>
         ) : null}
 
-        <div>
+        <div className="flex flex-col gap-1">
           <CardTitle className="text-sm">
-            {activeLayer.name ?? "Layers"}
+            {activeLayer.name ?? "Layer"}
           </CardTitle>
           {activeLayer.width && activeLayer.height ? (
             <CardDescription>
@@ -114,33 +124,20 @@ export default function Layers() {
         </div>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col">
-        {visibleLayers.map((layer, index) => (
-          <div
-            key={layer.id}
-            onClick={() => handleSelectLayer(layer.id!)}
-            className={cn(
-              "cursor-pointer border border-transparent ease-in-out hover:bg-secondary",
-              {
-                "animate-pulse": isGenerating,
-                "border-primary": layerComparisonMode
-                  ? comparedLayers.includes(layer.id ?? "")
-                  : activeLayer.id === layer.id,
-              },
-            )}
+        <DndContext
+          collisionDetection={closestCenter}
+          modifiers={[restrictToVerticalAxis]}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={visibleLayers}
+            strategy={verticalListSortingStrategy}
           >
-            <div className="relative flex items-center p-4">
-              <div className="flex h-8 w-full items-center justify-between">
-                {!layer.url && (
-                  <p className="justify-self-end text-xs font-medium">
-                    New Layer
-                  </p>
-                )}
-                <LayerImage layer={layer} />
-                <LayerInfo layer={layer} layerIndex={index} />
-              </div>
-            </div>
-          </div>
-        ))}
+            {visibleLayers.map((layer, index) => (
+              <Layer key={layer.id} layer={layer} layerIndex={index} />
+            ))}
+          </SortableContext>
+        </DndContext>
       </CardContent>
       <div className="sticky bottom-0 flex shrink-0 gap-2 bg-card p-4">
         <Button

@@ -4,13 +4,13 @@ export type ActionResult<U, V> = {
 };
 
 export type LayerType = {
-  publicId?: string;
+  id: string;
+  name?: string;
+  url?: string;
+  format?: string;
   width?: number;
   height?: number;
-  url?: string;
-  id?: string;
-  name?: string;
-  format?: string;
+  publicId?: string;
   posterUrl?: string;
   resourceType?: string;
   transcriptionUrl?: string;

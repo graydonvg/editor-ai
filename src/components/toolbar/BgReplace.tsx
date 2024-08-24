@@ -43,7 +43,7 @@ export default function BgReplace() {
           height: activeLayer.height,
           width: activeLayer.width,
           publicId: activeLayer.publicId,
-          resourceType: "image",
+          resourceType: activeLayer.resourceType,
         }),
       );
 
@@ -73,6 +73,10 @@ export default function BgReplace() {
         </h3>
         <p className="text-sm text-muted-foreground">
           Replace the background of an image with AI-generated content.
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Either provide your own description, or have AI generate a random
+          background for you.
         </p>
         <div className="flex items-center gap-2">
           <Label htmlFor="prompt">Prompt:</Label>

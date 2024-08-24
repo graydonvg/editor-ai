@@ -14,7 +14,7 @@ import { genRemoveAction } from "@/actions/gen-remove-action";
 import { toast } from "react-toastify";
 import { handleToastUpdate } from "../ui/Toast";
 
-export default function ObjectRemove() {
+export default function GenRemove() {
   const dispatch = useAppDispatch();
   const isGenerating = useAppSelector((state) => state.image.isGenerating);
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
@@ -43,7 +43,7 @@ export default function ObjectRemove() {
           height: activeLayer.height,
           width: activeLayer.width,
           publicId: activeLayer.publicId,
-          resourceType: "image",
+          resourceType: activeLayer.resourceType,
         }),
       );
 
@@ -62,15 +62,14 @@ export default function ObjectRemove() {
       <PopoverTrigger disabled={!activeLayer.url} asChild>
         <Button variant="outline" className="p-8">
           <span className="flex flex-col items-center justify-center gap-1 text-xs font-medium">
-            Object Removal <Eraser size={20} />
+            Generative Remove <Eraser size={20} />
           </span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="ml-4 w-full max-w-sm space-y-4">
-        <h3 className="font-medium leading-none">Generative Object Removal</h3>
+        <h3 className="font-medium leading-none">Generative Remove</h3>
         <p className="text-sm text-muted-foreground">
-          Specify the object you want to remove by using a short prompt like:
-          tree, chair, etc.
+          Remove unwanted objects, text, or user-defined regions from images.
         </p>
         <div className="flex items-center gap-2">
           <Label htmlFor="object">Object:</Label>

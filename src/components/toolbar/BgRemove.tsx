@@ -35,11 +35,11 @@ export default function BgRemove() {
           id: newLayerId,
           url: res?.data?.result,
           name: "bg-removed-" + activeLayer.name,
-          format: "png",
+          format: activeLayer.format,
           height: activeLayer.height,
           width: activeLayer.width,
           publicId: activeLayer.publicId,
-          resourceType: "image",
+          resourceType: activeLayer.resourceType,
         }),
       );
 
@@ -64,7 +64,7 @@ export default function BgRemove() {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="ml-4 w-full max-w-sm space-y-4">
-        <h3 className="font-medium leading-none">Remove Background</h3>
+        <h3 className="font-medium leading-none">Background Removal</h3>
         <p className="text-sm text-muted-foreground">
           Remove the background of an image with one simple click.
         </p>

@@ -52,8 +52,7 @@ export default function UploadImage() {
 
         if (res?.data?.result) {
           handleToastUpdate(toastId, "Upload successful", "success");
-
-          dispatch(
+          res?.data.result.dispatch(
             layerUpdated({
               id: activeLayer.id,
               url: res.data.result.url,

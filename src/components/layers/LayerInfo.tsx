@@ -1,6 +1,12 @@
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { LayerType } from "@/lib/types";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/Dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/Dialog";
 import { Button } from "../ui/Button";
 import { Ellipsis, Trash2 } from "lucide-react";
 import { MouseEvent } from "react";
@@ -35,7 +41,10 @@ export default function LayerInfo({ layer, layerIndex }: Props) {
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <h3>Layer {layer.id}</h3>
+        <DialogTitle>Layer {layer.id}</DialogTitle>
+        <DialogDescription className="sr-only">
+          Details of the selected layer including filename, format, and size.
+        </DialogDescription>
         <div className="space-y-0.5 py-4">
           <p>
             <span className="font-bold">Filename:</span> {layer.name}
