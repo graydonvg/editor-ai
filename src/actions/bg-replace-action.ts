@@ -57,7 +57,7 @@ function constructUrl(activeImageUrl: string, prompt: string) {
   }
 
   const bgReplaceUrl = prompt
-    ? `${baseUrl}/upload/e_gen_background_replace:prompt_${prompt}/${imagePath}`
+    ? `${baseUrl}/upload/e_gen_background_replace:prompt_${encodeURIComponent(prompt)}/${imagePath}`
     : `${baseUrl}/upload/e_gen_background_replace/${imagePath}`;
 
   actionLog.info("Constructed URL successfully", {

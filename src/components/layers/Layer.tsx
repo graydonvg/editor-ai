@@ -26,7 +26,7 @@ export default function Layer({ layer, layerIndex }: Props) {
   );
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
-      id: layer.id!,
+      id: layer.id,
     });
 
   function handleSelectLayer(layerId: string) {
@@ -42,7 +42,7 @@ export default function Layer({ layer, layerIndex }: Props) {
   return (
     <div
       ref={setNodeRef}
-      onClick={() => handleSelectLayer(layer.id!)}
+      onClick={() => handleSelectLayer(layer.id)}
       style={{
         transform: CSS.Translate.toString(transform),
         transition,

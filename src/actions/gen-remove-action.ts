@@ -56,7 +56,7 @@ function constructUrl(activeImageUrl: string, prompt: string) {
     throw new Error("Invalid URL format");
   }
 
-  const genRemoveUrl = `${baseUrl}/upload/e_gen_remove:${encodeURIComponent(prompt)}/${imagePath}`;
+  const genRemoveUrl = `${baseUrl}/upload/e_gen_remove:prompt_${encodeURIComponent(prompt)}/${imagePath}`;
 
   actionLog.info("Constructed URL successfully", {
     genRemoveUrl,

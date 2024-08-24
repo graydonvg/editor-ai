@@ -30,6 +30,7 @@ import Layer from "./Layer";
 
 export default function Layers() {
   const dispatch = useAppDispatch();
+  const isGenerating = useAppSelector((state) => state.image.isGenerating);
   const layers = useAppSelector((state) => state.layer.layers);
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
   const layerComparisonMode = useAppSelector(
@@ -149,9 +150,13 @@ export default function Layers() {
           <Layers2 size={18} className="text-secondary-foreground" />
         </Button>
         <Button
-          onClick={() => handleCompareLayers(activeLayer.id!)}
+          onClick={() => handleCompareLayers(activeLayer.id)}
           variant="outline"
-          disabled={!activeLayer.url || activeLayer.resourceType === "video"}
+          disabled={
+            !activeLayer.url ||
+            activeLayer.resourceType === "video" ||
+            isGenerating
+          }
           className="flex w-full gap-2"
         >
           <span>

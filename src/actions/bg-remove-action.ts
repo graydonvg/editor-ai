@@ -50,9 +50,7 @@ export const bgRemoveAction = actionClient
   );
 
 function constructUrl(activeImageUrl: string, format: string) {
-  const urlParts = activeImageUrl.split(format);
-  const pngConvert = urlParts[0] + "png";
-  const [baseUrl, imagePath] = pngConvert.split("/upload/");
+  const [baseUrl, imagePath] = activeImageUrl.split("/upload/");
 
   if (!baseUrl || !imagePath) {
     throw new Error("Invalid URL format");

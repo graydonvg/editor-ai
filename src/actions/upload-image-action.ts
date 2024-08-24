@@ -49,6 +49,9 @@ export const uploadImageAction = actionClient
             .upload_stream(
               {
                 upload_preset: "ml_default",
+                use_filename: true,
+                unique_filename: false,
+                filename_override: file.name,
               },
               function (error, result) {
                 if (error) {

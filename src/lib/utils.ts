@@ -8,10 +8,9 @@ export function cn(...inputs: ClassValue[]) {
 export function generateLayer() {
   return {
     id: crypto.randomUUID(),
-    url: "",
+    size: 0,
     height: 0,
     width: 0,
-    publicId: "",
   };
 }
 

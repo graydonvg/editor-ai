@@ -8,8 +8,9 @@ export type LayerType = {
   name?: string;
   url?: string;
   format?: string;
-  width?: number;
-  height?: number;
+  size: number;
+  width: number;
+  height: number;
   publicId?: string;
   posterUrl?: string;
   resourceType?: string;

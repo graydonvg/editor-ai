@@ -38,9 +38,10 @@ export default function UploadImage() {
           layerUpdated({
             id: activeLayer.id,
             url: objectUrl,
+            name: acceptedFiles[0].name,
+            size: 0,
             width: 0,
             height: 0,
-            name: acceptedFiles[0].name,
             publicId: "",
             format: "",
             resourceType: "image",
@@ -52,13 +53,15 @@ export default function UploadImage() {
 
         if (res?.data?.result) {
           handleToastUpdate(toastId, "Upload successful", "success");
-          res?.data.result.dispatch(
+
+          dispatch(
             layerUpdated({
               id: activeLayer.id,
               url: res.data.result.url,
+              name: res.data.result.original_filename,
+              size: res.data.result.bytes,
               width: res.data.result.width,
               height: res.data.result.height,
-              name: res.data.result.original_filename,
               publicId: res.data.result.public_id,
               format: res.data.result.format,
               resourceType: res.data.result.resource_type,

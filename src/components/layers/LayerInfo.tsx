@@ -47,18 +47,26 @@ export default function LayerInfo({ layer, layerIndex }: Props) {
         </DialogDescription>
         <div className="space-y-0.5 py-4">
           <p>
-            <span className="font-bold">Filename:</span> {layer.name}
+            <span className="font-bold">Filename: </span>
+            {layer.name}
           </p>
           <p>
-            <span className="font-bold">Format:</span> {layer.format}
+            <span className="font-bold">Format: </span>
+            {layer.format}
           </p>
           <p>
-            <span className="font-bold">Size:</span> {layer.width}x
-            {layer.height}
+            <span className="font-bold">File size: </span>
+            {layer.size < 1_048_576 // 1_048_576 bytes = 1 MB in the 1024 system
+              ? `${(layer.size / 1_024).toFixed(2)} KB`
+              : `${(layer.size / 1_048_576).toFixed(2)} MB`}
+          </p>
+          <p>
+            <span className="font-bold">Dimensions: </span>
+            {layer.width} x {layer.height}
           </p>
         </div>
         <Button
-          onClick={(e) => handleDeleteLayer(e, layer.id!)}
+          onClick={(e) => handleDeleteLayer(e, layer.id)}
           className="flex items-center gap-2"
         >
           <span>Delete Layer</span>
