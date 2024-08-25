@@ -20,7 +20,7 @@ export default function BgReplace() {
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
   const [prompt, setPrompt] = useState("");
 
-  async function handleRemove() {
+  async function replaceBackground() {
     dispatch(generationStarted());
     const toastId = toast.loading("Replacing background...");
 
@@ -83,19 +83,19 @@ export default function BgReplace() {
           for you.
         </p>
         <div className="flex items-center gap-2">
-          <Label htmlFor="prompt">Prompt:</Label>
+          <Label htmlFor="background">Background:</Label>
           <Input
-            name="prompt"
+            id="background"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             disabled={isGenerating}
-            className="col-span-2 h-8"
-            placeholder="Describe the new background..."
+            className="h-8"
+            placeholder="Describe the new background"
           />
         </div>
         <Button
           disabled={!activeLayer.url || isGenerating}
-          onClick={handleRemove}
+          onClick={replaceBackground}
           className="w-full"
         >
           {isGenerating ? "Replacing..." : "Replace Background"}

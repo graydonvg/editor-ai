@@ -16,7 +16,7 @@ export default function BgRemove() {
   const isGenerating = useAppSelector((state) => state.image.isGenerating);
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
 
-  async function handleRemove() {
+  async function removeBackground() {
     dispatch(generationStarted());
     const toastId = toast.loading("Removing background...");
 
@@ -35,7 +35,7 @@ export default function BgRemove() {
           id: newLayerId,
           url: res?.data?.result,
           name: "bg-removed-" + activeLayer.name,
-          format: activeLayer.format,
+          format: "png",
           height: activeLayer.height,
           width: activeLayer.width,
           publicId: activeLayer.publicId,
@@ -74,7 +74,7 @@ export default function BgRemove() {
         </p>
         <Button
           disabled={!activeLayer.url || isGenerating}
-          onClick={handleRemove}
+          onClick={removeBackground}
           className="w-full"
         >
           {isGenerating ? "Removing..." : "Remove Background"}

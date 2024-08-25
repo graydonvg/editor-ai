@@ -30,18 +30,17 @@ export default function ImageComparison() {
     );
   }
 
+  const bgRemovalKeywords = ["background_removal", "e_extract"];
+
+  function hasBgRemoved(url?: string) {
+    return bgRemovalKeywords.some((keyword) => url?.includes(keyword));
+  }
+
   let layersToCompare = comparisonLayers;
-  const includesBgRemoved = comparisonLayers.some((layer) =>
-    layer.url?.includes("background_removal"),
-  );
 
-  if (includesBgRemoved) {
-    // Image with bg removed must come first otherwise the bg from the other image will show
-    layersToCompare = comparisonLayers.sort((a, b) => {
-      const aHasBgRemoved = a.url?.includes("background_removal") ? -1 : 1;
-      const bHasBgRemoved = b.url?.includes("background_removal") ? -1 : 1;
-
-      return aHasBgRemoved - bHasBgRemoved;
+  if (comparisonLayers.some((layer) => hasBgRemoved(layer.url))) {
+    layersToCompare = [...comparisonLayers].sort((a, b) => {
+      return hasBgRemoved(a.url) ? -1 : hasBgRemoved(b.url) ? 1 : 0;
     });
   }
 

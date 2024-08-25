@@ -119,7 +119,7 @@ export default function GenFill() {
     );
   }
 
-  async function handleRemove() {
+  async function generate() {
     dispatch(generationStarted());
     const toastId = toast.loading("Generating...");
 
@@ -149,8 +149,6 @@ export default function GenFill() {
       );
 
       dispatch(activeLayerSet(newLayerId));
-
-      setNewDimensions({ width: 0, height: 0 });
     }
 
     if (res?.data?.error) {
@@ -203,7 +201,7 @@ export default function GenFill() {
             Adjust Width:
           </Label>
           <Input
-            name="adjust-width"
+            id="adjust-width"
             type="range"
             min={-activeLayer.width + 100}
             max={activeLayer.width}
@@ -220,7 +218,7 @@ export default function GenFill() {
             Adjust Height:
           </Label>
           <Input
-            name="adjust-height"
+            id="adjust-height"
             type="range"
             min={-activeLayer.height + 100}
             max={activeLayer.height}
@@ -249,7 +247,7 @@ export default function GenFill() {
         </div>
         <Button
           disabled={!activeLayer.url || isGenerating}
-          onClick={handleRemove}
+          onClick={generate}
           className="w-full"
         >
           {isGenerating ? "Generating..." : "Generate"}

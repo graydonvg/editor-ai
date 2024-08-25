@@ -26,7 +26,7 @@ export const genRemoveAction = actionClient
       });
 
       try {
-        const genRemoveUrl = constructUrl(activeImageUrl, prompt);
+        const genRemoveUrl = constructUrl({ activeImageUrl, prompt });
 
         await waitForImageProcessing(genRemoveUrl, actionLog);
 
@@ -49,7 +49,10 @@ export const genRemoveAction = actionClient
     },
   );
 
-function constructUrl(activeImageUrl: string, prompt: string) {
+function constructUrl({
+  activeImageUrl,
+  prompt,
+}: z.infer<typeof genRemoveSchema>) {
   const [baseUrl, imagePath] = activeImageUrl.split("/upload/");
 
   if (!baseUrl || !imagePath) {

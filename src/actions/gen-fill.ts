@@ -31,12 +31,12 @@ export const genFillAction = actionClient
       });
 
       try {
-        const genFillUrl = constructUrl(
+        const genFillUrl = constructUrl({
           activeImageUrl,
           aspectRatio,
           width,
           height,
-        );
+        });
 
         await waitForImageProcessing(genFillUrl, actionLog);
 
@@ -61,12 +61,8 @@ export const genFillAction = actionClient
     },
   );
 
-function constructUrl(
-  activeImageUrl: string,
-  aspectRatio: string,
-  width: number,
-  height: number,
-) {
+function constructUrl(params: z.infer<typeof genFillSchema>) {
+  const { activeImageUrl, aspectRatio, width, height } = params;
   const [baseUrl, imagePath] = activeImageUrl.split("/upload/");
 
   if (!baseUrl || !imagePath) {

@@ -26,7 +26,7 @@ export const bgRemoveAction = actionClient
       });
 
       try {
-        const bgRemoveUrl = constructUrl(activeImageUrl, format);
+        const bgRemoveUrl = constructUrl({ activeImageUrl, format });
 
         await waitForImageProcessing(bgRemoveUrl, actionLog);
 
@@ -49,8 +49,13 @@ export const bgRemoveAction = actionClient
     },
   );
 
-function constructUrl(activeImageUrl: string, format: string) {
-  const [baseUrl, imagePath] = activeImageUrl.split("/upload/");
+function constructUrl({
+  activeImageUrl,
+  format,
+}: z.infer<typeof bgRemoveSchema>) {
+  const urlParts = activeImageUrl.split(format);
+  const pngConvert = urlParts[0] + "png";
+  const [baseUrl, imagePath] = pngConvert.split("/upload/");
 
   if (!baseUrl || !imagePath) {
     throw new Error("Invalid URL format");

@@ -20,7 +20,7 @@ export default function GenRemove() {
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
   const [object, setObject] = useState("");
 
-  async function handleRemove() {
+  async function removeObject() {
     dispatch(generationStarted());
     const toastId = toast.loading(`Removing ${object}...`);
 
@@ -82,17 +82,17 @@ export default function GenRemove() {
         <div className="flex items-center gap-2">
           <Label htmlFor="object">Object:</Label>
           <Input
-            name="object"
+            id="object"
             value={object}
             onChange={(e) => setObject(e.target.value)}
             disabled={isGenerating}
-            className="col-span-2 h-8"
-            placeholder="Enter 1 object at a time..."
+            className="h-8"
+            placeholder="Enter 1 object at a time"
           />
         </div>
         <Button
           disabled={!activeLayer.url || !object || isGenerating}
-          onClick={handleRemove}
+          onClick={removeObject}
           className="w-full"
         >
           {isGenerating ? "Removing..." : "Remove Object"}

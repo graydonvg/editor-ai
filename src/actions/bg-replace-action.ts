@@ -26,7 +26,7 @@ export const bgReplaceAction = actionClient
       });
 
       try {
-        const bgReplaceUrl = constructUrl(activeImageUrl, prompt);
+        const bgReplaceUrl = constructUrl({ activeImageUrl, prompt });
 
         await waitForImageProcessing(bgReplaceUrl, actionLog);
 
@@ -49,7 +49,10 @@ export const bgReplaceAction = actionClient
     },
   );
 
-function constructUrl(activeImageUrl: string, prompt: string) {
+function constructUrl({
+  activeImageUrl,
+  prompt,
+}: z.infer<typeof bgReplaceSchema>) {
   const [baseUrl, imagePath] = activeImageUrl.split("/upload/");
 
   if (!baseUrl || !imagePath) {
