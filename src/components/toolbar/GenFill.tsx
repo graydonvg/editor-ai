@@ -1,0 +1,260 @@
+import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
+import { Button } from "../ui/Button";
+import { ArrowRight, Crop, ImageOff } from "lucide-react";
+import { activeLayerSet, layerAdded } from "@/lib/redux/features/layerSlice";
+import {
+  generationStarted,
+  generationStopped,
+} from "@/lib/redux/features/imageSlice";
+import { bgRemoveAction } from "@/actions/bg-remove-action";
+import { toast } from "react-toastify";
+import { handleToastUpdate } from "../ui/Toast";
+import { useMemo, useState } from "react";
+import { Label } from "../ui/Label";
+import { Input } from "../ui/Input";
+import { genFillAction } from "@/actions/gen-fill";
+
+type Dimensions = {
+  width: number;
+  height: number;
+};
+
+export default function GenFill() {
+  const dispatch = useAppDispatch();
+  const isGenerating = useAppSelector((state) => state.image.isGenerating);
+  const activeLayer = useAppSelector((state) => state.layer.activeLayer);
+  const [newDimensions, setNewDimensions] = useState<Dimensions>({
+    width: 0,
+    height: 0,
+  });
+  const PREVIEW_SIZE = 300;
+  const EXPANSION_THRESHOLD = 250;
+
+  const previewStyle = useMemo(() => {
+    if (!activeLayer.width || !activeLayer.height || !activeLayer.url)
+      return {};
+
+    const newWidth = activeLayer.width + newDimensions.width;
+    const newHeight = activeLayer.height + newDimensions.height;
+    const scale = Math.min(PREVIEW_SIZE / newWidth, PREVIEW_SIZE / newHeight);
+
+    return {
+      width: `${newWidth * scale}px`,
+      height: `${newHeight * scale}px`,
+      backgroundImage: `url(${activeLayer.url})`,
+      backgroundSize: `${activeLayer.width * scale}px ${activeLayer.height * scale}px`,
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      position: "relative" as const,
+    };
+  }, [activeLayer, newDimensions.width, newDimensions.height]);
+
+  const previewOverlayStyle = useMemo(() => {
+    if (!activeLayer.width || !activeLayer.height || !activeLayer.url)
+      return {};
+
+    const scale = Math.min(
+      PREVIEW_SIZE / activeLayer.width,
+      PREVIEW_SIZE / activeLayer.height,
+    );
+
+    const leftWidth =
+      newDimensions.width > 0 ? `${(newDimensions.width / 2) * scale}px` : "0";
+    const rightWidth =
+      newDimensions.width > 0 ? `${(newDimensions.width / 2) * scale}px` : "0";
+    const topHeight =
+      newDimensions.height > 0
+        ? `${(newDimensions.height / 2) * scale}px`
+        : "0";
+    const bottomHeight =
+      newDimensions.height > 0
+        ? `${(newDimensions.height / 2) * scale}px`
+        : "0";
+
+    return {
+      position: "absolute" as const,
+      top: "0",
+      left: "0",
+      right: "0",
+      bottom: "0",
+      boxShadow: `inset ${leftWidth} ${topHeight} 0 rgba(48, 119, 255, 1),
+			inset -${rightWidth} ${topHeight} 0 rgba(48, 119, 255, 1),
+			inset ${leftWidth} -${bottomHeight} 0 rgba(48, 119, 255, 1),
+			inset ${leftWidth} -${bottomHeight} 0 rgba(48, 119, 255, 1)`,
+    };
+  }, [activeLayer, newDimensions.width, newDimensions.height]);
+
+  function ExpansionIndicator({
+    value,
+    axis,
+  }: {
+    value: number;
+    axis: "x" | "y";
+  }) {
+    const isVisible = Math.abs(value) >= EXPANSION_THRESHOLD;
+
+    if (!isVisible) return;
+
+    const position =
+      axis === "x"
+        ? {
+            top: "50%",
+            [value > 0 ? "right" : "left"]: 0,
+            transform: "translateY(-50%)",
+          }
+        : {
+            left: "50%",
+            [value > 0 ? "bottom" : "top"]: 0,
+            transform: "translateX(-50%)",
+          };
+
+    return (
+      <div
+        className="absolute rounded-md bg-primary px-2 py-1 text-xs font-bold text-secondary"
+        style={position}
+      >
+        {Math.abs(value)}px
+      </div>
+    );
+  }
+
+  async function handleRemove() {
+    dispatch(generationStarted());
+    const toastId = toast.loading("Generating...");
+
+    const res = await genFillAction({
+      activeImageUrl: activeLayer.url!,
+      aspectRatio: "1:1",
+      width: newDimensions.width + activeLayer.width,
+      height: newDimensions.height + activeLayer.height,
+    });
+
+    const newLayerId = crypto.randomUUID();
+
+    if (res?.data?.result) {
+      handleToastUpdate(toastId, "Image generated successfully", "success");
+
+      dispatch(
+        layerAdded({
+          id: newLayerId,
+          url: res?.data?.result,
+          name: "gen-filled-" + activeLayer.name,
+          format: activeLayer.format,
+          height: activeLayer.height + newDimensions.height,
+          width: activeLayer.width + newDimensions.width,
+          publicId: activeLayer.publicId,
+          resourceType: activeLayer.resourceType,
+        }),
+      );
+
+      dispatch(activeLayerSet(newLayerId));
+
+      setNewDimensions({ width: 0, height: 0 });
+    }
+
+    if (res?.data?.error) {
+      handleToastUpdate(toastId, res.data.error, "error");
+    }
+
+    dispatch(generationStopped());
+  }
+
+  return (
+    <Popover>
+      <PopoverTrigger disabled={!activeLayer.url} asChild>
+        <Button variant="outline" className="p-8">
+          <span className="flex flex-col items-center justify-center gap-1 text-xs font-medium">
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
+            Generative Fill <Crop size={20} aria-hidden="true" />
+          </span>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        className="ml-4 w-full max-w-sm space-y-4"
+        side="right"
+        align="start"
+      >
+        <h3 className="font-medium leading-none">Generative Fill</h3>
+        <p className="text-sm text-muted-foreground">
+          Use AI to seamlessly expand or crop your images, integrating new
+          content that matches the original.
+        </p>
+        {activeLayer.width && activeLayer.height ? (
+          <div className="flex items-center justify-evenly">
+            <div className="flex flex-col items-center">
+              <span className="text-xs">Current dimensions:</span>
+              <p className="text-sm font-bold text-primary">
+                {activeLayer.width} x {activeLayer.height}
+              </p>
+            </div>
+            <ArrowRight size={28} />
+            <div className="flex flex-col items-center">
+              <span className="text-xs">New dimensions:</span>
+              <p className="text-sm font-bold text-primary">
+                {activeLayer.width + newDimensions.width} x{" "}
+                {activeLayer.height + newDimensions.height}
+              </p>
+            </div>
+          </div>
+        ) : null}
+        <div className="flex flex-col items-center justify-center gap-2">
+          <Label htmlFor="adjust-width" className="text-nowrap">
+            Adjust Width:
+          </Label>
+          <Input
+            name="adjust-width"
+            type="range"
+            min={-activeLayer.width + 100}
+            max={activeLayer.width}
+            value={newDimensions.width}
+            onChange={(e) =>
+              setNewDimensions((prev) => ({
+                ...prev,
+                width: parseInt(e.target.value),
+              }))
+            }
+            className="h-8"
+          />
+          <Label htmlFor="adjust-height" className="text-nowrap">
+            Adjust Height:
+          </Label>
+          <Input
+            name="adjust-height"
+            type="range"
+            min={-activeLayer.height + 100}
+            max={activeLayer.height}
+            value={newDimensions.height}
+            onChange={(e) =>
+              setNewDimensions((prev) => ({
+                ...prev,
+                height: parseInt(e.target.value),
+              }))
+            }
+            className="h-8"
+          />
+        </div>
+        <div
+          style={{
+            width: `${PREVIEW_SIZE}px`,
+            height: `${PREVIEW_SIZE}px`,
+          }}
+          className="preview-container m-auto flex flex-grow items-center justify-center overflow-hidden"
+        >
+          <div style={previewStyle}>
+            <div style={previewOverlayStyle} className="animate-pulse"></div>
+            <ExpansionIndicator value={newDimensions.width} axis="x" />
+            <ExpansionIndicator value={newDimensions.height} axis="y" />
+          </div>
+        </div>
+        <Button
+          disabled={!activeLayer.url || isGenerating}
+          onClick={handleRemove}
+          className="w-full"
+        >
+          {isGenerating ? "Generating..." : "Generate"}
+        </Button>
+      </PopoverContent>
+    </Popover>
+  );
+}

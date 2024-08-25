@@ -8,7 +8,6 @@ export type LayerType = {
   name?: string;
   url?: string;
   format?: string;
-  size: number;
   width: number;
   height: number;
   publicId?: string;

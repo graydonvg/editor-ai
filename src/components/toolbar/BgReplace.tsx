@@ -67,7 +67,11 @@ export default function BgReplace() {
           </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="ml-4 w-full max-w-sm space-y-4">
+      <PopoverContent
+        className="ml-4 w-full max-w-sm space-y-4"
+        side="right"
+        align="start"
+      >
         <h3 className="font-medium leading-none">
           Generative Background Replace
         </h3>
@@ -75,8 +79,8 @@ export default function BgReplace() {
           Replace the background of an image with AI-generated content.
         </p>
         <p className="text-sm text-muted-foreground">
-          Either provide your own description, or have AI generate a random
-          background for you.
+          Provide your own description, or let the AI create a random background
+          for you.
         </p>
         <div className="flex items-center gap-2">
           <Label htmlFor="prompt">Prompt:</Label>

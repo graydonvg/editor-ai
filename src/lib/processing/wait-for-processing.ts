@@ -24,25 +24,23 @@ export async function waitForImageProcessing(url: string, actionLog: Logger) {
         return;
       }
 
-      if (attempt < maxAttempts) {
-        const delay = initialDelay * Math.pow(2, attempt - 1);
-
-        actionLog.warn("Image not yet processed, retrying...", {
-          attempt,
-          url,
-          nextCheckIn: `${delay / 1000}s`,
-        });
-
-        await sleep(delay);
+      if (attempt === maxAttempts) {
+        throw new Error(
+          "Image processing failed after multiple attempts. Please try again later.",
+        );
       }
+
+      const delay = initialDelay * Math.pow(2, attempt - 1);
+
+      actionLog.warn("Image not yet processed, retrying...", {
+        attempt,
+        url,
+        nextCheckIn: `${delay / 1000}s`,
+      });
+
+      await sleep(delay);
     } catch (error) {
       throw new Error("An unexpected error occurred during image processing");
-    }
-
-    if (attempt === maxAttempts) {
-      throw new Error(
-        "Image processing failed after multiple attempts. Please try again later.",
-      );
     }
   }
 }

@@ -18,7 +18,7 @@ export default function LayerImage({ layer }: Props) {
                   : layer.url
               }
               alt={layer.name}
-              className="h-full w-full rounded-sm object-contain"
+              className="h-full w-full object-contain"
               width={50}
               height={50}
             />

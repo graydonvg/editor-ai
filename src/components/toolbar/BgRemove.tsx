@@ -63,7 +63,11 @@ export default function BgRemove() {
           </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="ml-4 w-full max-w-sm space-y-4">
+      <PopoverContent
+        className="ml-4 w-full max-w-sm space-y-4"
+        side="right"
+        align="start"
+      >
         <h3 className="font-medium leading-none">Background Removal</h3>
         <p className="text-sm text-muted-foreground">
           Remove the background of an image with one simple click.

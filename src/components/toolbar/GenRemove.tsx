@@ -66,10 +66,18 @@ export default function GenRemove() {
           </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="ml-4 w-full max-w-sm space-y-4">
+      <PopoverContent
+        className="ml-4 w-full max-w-sm space-y-4"
+        side="right"
+        align="start"
+      >
         <h3 className="font-medium leading-none">Generative Remove</h3>
         <p className="text-sm text-muted-foreground">
           Remove unwanted objects, text, or user-defined regions from images.
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Specify the objects you want to remove by using a short prompt like:
+          fork, text, mountain, etc.
         </p>
         <div className="flex items-center gap-2">
           <Label htmlFor="object">Object:</Label>

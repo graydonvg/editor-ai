@@ -55,12 +55,6 @@ export default function LayerInfo({ layer, layerIndex }: Props) {
             {layer.format}
           </p>
           <p>
-            <span className="font-bold">File size: </span>
-            {layer.size < 1_048_576 // 1_048_576 bytes = 1 MB in the 1024 system
-              ? `${(layer.size / 1_024).toFixed(2)} KB`
-              : `${(layer.size / 1_048_576).toFixed(2)} MB`}
-          </p>
-          <p>
             <span className="font-bold">Dimensions: </span>
             {layer.width} x {layer.height}
           </p>
