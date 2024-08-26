@@ -169,7 +169,7 @@ export default function GenFill() {
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="ml-4 w-full max-w-sm space-y-4"
+        className="ml-4 w-full max-w-sm space-y-6"
         side="right"
         align="start"
       >

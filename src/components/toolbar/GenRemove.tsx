@@ -67,7 +67,7 @@ export default function GenRemove() {
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="ml-4 w-full max-w-sm space-y-4"
+        className="ml-4 w-full max-w-sm space-y-6"
         side="right"
         align="start"
       >
@@ -79,24 +79,26 @@ export default function GenRemove() {
           Specify the objects you want to remove by using a short prompt like:
           fork, text, mountain, etc.
         </p>
-        <div className="flex items-center gap-2">
-          <Label htmlFor="object">Object:</Label>
-          <Input
-            id="object"
-            value={object}
-            onChange={(e) => setObject(e.target.value)}
-            disabled={isGenerating}
-            className="h-8"
-            placeholder="Enter 1 object at a time"
-          />
+        <div className="flex flex-col space-y-4">
+          <div className="flex items-center space-x-2">
+            <Label htmlFor="object">Object:</Label>
+            <Input
+              id="object"
+              value={object}
+              onChange={(e) => setObject(e.target.value)}
+              disabled={isGenerating}
+              className="h-8"
+              placeholder="Enter 1 object at a time"
+            />
+          </div>
+          <Button
+            disabled={!activeLayer.url || !object || isGenerating}
+            onClick={removeObject}
+            className="w-full"
+          >
+            {isGenerating ? "Removing..." : "Remove Object"}
+          </Button>
         </div>
-        <Button
-          disabled={!activeLayer.url || !object || isGenerating}
-          onClick={removeObject}
-          className="w-full"
-        >
-          {isGenerating ? "Removing..." : "Remove Object"}
-        </Button>
       </PopoverContent>
     </Popover>
   );

@@ -1,4 +1,4 @@
-import { generateLayer } from "@/lib/utils";
+import { cn, generateLayer } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -86,8 +86,8 @@ export default function Layers() {
   }
 
   return (
-    <Card className="scrollbar-thin scrollbar-track-secondary scrollbar-thumb-primary scrollbar-thumb-rounded-full scrollbar-track-rounded-full relative flex shrink-0 basis-[360px] flex-col overflow-x-hidden overflow-y-scroll shadow-2xl">
-      <CardHeader className="sticky top-0 z-50 min-h-28 bg-card px-4 py-6 shadow-sm">
+    <Card className="relative flex shrink-0 basis-[360px] flex-col overflow-x-hidden shadow-2xl">
+      <CardHeader className={cn("bg-card px-4 py-6 shadow-sm")}>
         {layerComparisonMode ? (
           <div>
             <CardTitle className="pb-2 text-sm">Comparing...</CardTitle>
@@ -112,19 +112,21 @@ export default function Layers() {
             </CardDescription>
           </div>
         ) : null}
-
         <div className="flex flex-col gap-1">
           <CardTitle className="text-sm">
             {activeLayer.name ?? "Layer"}
           </CardTitle>
           {activeLayer.width && activeLayer.height ? (
             <CardDescription>
-              {activeLayer.width}x{activeLayer.height}
+              {activeLayer.width} x {activeLayer.height}
             </CardDescription>
           ) : null}
         </div>
       </CardHeader>
-      <CardContent className="flex flex-1 flex-col">
+      <CardContent
+        className="flex flex-1 flex-col overflow-y-scroll"
+        style={{ scrollbarWidth: "thin" }}
+      >
         <DndContext
           collisionDetection={closestCenter}
           modifiers={[restrictToVerticalAxis]}

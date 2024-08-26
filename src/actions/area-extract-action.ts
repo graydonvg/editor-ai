@@ -14,7 +14,7 @@ const areaExtractSchema = z.object({
   activeImageUrl: z.string(),
   prompts: z.array(z.string()),
   multiple: z.boolean().optional(),
-  mode: z.enum(["default", "mask"]),
+  mode: z.enum(["content", "mask"]),
   invert: z.boolean().optional(),
   format: z.string(),
 });

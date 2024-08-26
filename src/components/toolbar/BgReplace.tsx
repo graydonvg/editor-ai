@@ -68,7 +68,7 @@ export default function BgReplace() {
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="ml-4 w-full max-w-sm space-y-4"
+        className="ml-4 w-full max-w-sm space-y-6"
         side="right"
         align="start"
       >
@@ -82,24 +82,26 @@ export default function BgReplace() {
           Provide your own description, or let the AI create a random background
           for you.
         </p>
-        <div className="flex items-center gap-2">
-          <Label htmlFor="background">Background:</Label>
-          <Input
-            id="background"
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            disabled={isGenerating}
-            className="h-8"
-            placeholder="Describe the new background"
-          />
+        <div className="flex flex-col space-y-4">
+          <div className="flex items-center space-x-2">
+            <Label htmlFor="background">Background:</Label>
+            <Input
+              id="background"
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              disabled={isGenerating}
+              className="h-8"
+              placeholder="Describe the new background"
+            />
+          </div>
+          <Button
+            disabled={!activeLayer.url || isGenerating}
+            onClick={replaceBackground}
+            className="w-full"
+          >
+            {isGenerating ? "Replacing..." : "Replace Background"}
+          </Button>
         </div>
-        <Button
-          disabled={!activeLayer.url || isGenerating}
-          onClick={replaceBackground}
-          className="w-full"
-        >
-          {isGenerating ? "Replacing..." : "Replace Background"}
-        </Button>
       </PopoverContent>
     </Popover>
   );
