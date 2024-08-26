@@ -22,7 +22,7 @@ export default function BgReplace() {
 
   async function replaceBackground() {
     dispatch(generationStarted());
-    const toastId = toast.loading("Replacing background...");
+    const toastId = toast.loading("Processing...");
 
     const res = await bgReplaceAction({
       activeImageUrl: activeLayer.url!,
@@ -32,7 +32,7 @@ export default function BgReplace() {
     const newLayerId = crypto.randomUUID();
 
     if (res?.data?.result) {
-      handleToastUpdate(toastId, "Background replaced successfully", "success");
+      handleToastUpdate(toastId, "Processing completed", "success");
 
       dispatch(
         layerAdded({

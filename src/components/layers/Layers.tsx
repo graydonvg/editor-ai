@@ -124,7 +124,7 @@ export default function Layers() {
         </div>
       </CardHeader>
       <CardContent
-        className="flex flex-1 flex-col overflow-y-scroll"
+        className="flex flex-1 flex-col overflow-y-auto"
         style={{ scrollbarWidth: "thin" }}
       >
         <DndContext

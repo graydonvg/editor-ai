@@ -18,7 +18,7 @@ export default function BgRemove() {
 
   async function removeBackground() {
     dispatch(generationStarted());
-    const toastId = toast.loading("Removing background...");
+    const toastId = toast.loading("Processing...");
 
     const res = await bgRemoveAction({
       activeImageUrl: activeLayer.url!,
@@ -28,7 +28,7 @@ export default function BgRemove() {
     const newLayerId = crypto.randomUUID();
 
     if (res?.data?.result) {
-      handleToastUpdate(toastId, "Background removed successfully", "success");
+      handleToastUpdate(toastId, "Processing completed", "success");
 
       dispatch(
         layerAdded({

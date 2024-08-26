@@ -22,7 +22,7 @@ export default function GenRemove() {
 
   async function removeObject() {
     dispatch(generationStarted());
-    const toastId = toast.loading(`Removing ${object}...`);
+    const toastId = toast.loading("Processing...");
 
     const res = await genRemoveAction({
       prompt: object,
@@ -32,7 +32,7 @@ export default function GenRemove() {
     const newLayerId = crypto.randomUUID();
 
     if (res?.data?.result) {
-      handleToastUpdate(toastId, `${object} removed successfully`, "success");
+      handleToastUpdate(toastId, "Processing completed", "success");
 
       dispatch(
         layerAdded({

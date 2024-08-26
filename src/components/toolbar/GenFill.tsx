@@ -1,13 +1,12 @@
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
 import { Button } from "../ui/Button";
-import { ArrowRight, Crop, ImageOff } from "lucide-react";
+import { ArrowRight, Crop } from "lucide-react";
 import { activeLayerSet, layerAdded } from "@/lib/redux/features/layerSlice";
 import {
   generationStarted,
   generationStopped,
 } from "@/lib/redux/features/imageSlice";
-import { bgRemoveAction } from "@/actions/bg-remove-action";
 import { toast } from "react-toastify";
 import { handleToastUpdate } from "../ui/Toast";
 import { useMemo, useState } from "react";
@@ -20,16 +19,16 @@ type Dimensions = {
   height: number;
 };
 
+const DEFAULT_DIMENSIONS = { width: 0, height: 0 };
+const PREVIEW_SIZE = 300;
+const EXPANSION_THRESHOLD = 1;
+
 export default function GenFill() {
   const dispatch = useAppDispatch();
   const isGenerating = useAppSelector((state) => state.image.isGenerating);
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
-  const [newDimensions, setNewDimensions] = useState<Dimensions>({
-    width: 0,
-    height: 0,
-  });
-  const PREVIEW_SIZE = 300;
-  const EXPANSION_THRESHOLD = 250;
+  const [newDimensions, setNewDimensions] =
+    useState<Dimensions>(DEFAULT_DIMENSIONS);
 
   const previewStyle = useMemo(() => {
     if (!activeLayer.width || !activeLayer.height || !activeLayer.url)
@@ -55,8 +54,8 @@ export default function GenFill() {
       return {};
 
     const scale = Math.min(
-      PREVIEW_SIZE / activeLayer.width,
-      PREVIEW_SIZE / activeLayer.height,
+      PREVIEW_SIZE / (activeLayer.width + newDimensions.width),
+      PREVIEW_SIZE / (activeLayer.height + newDimensions.height),
     );
 
     const leftWidth =
@@ -105,15 +104,16 @@ export default function GenFill() {
           }
         : {
             left: "50%",
-            [value > 0 ? "bottom" : "top"]: 0,
+            [value > 0 ? "top" : "bottom"]: 0,
             transform: "translateX(-50%)",
           };
 
     return (
       <div
-        className="absolute rounded-md bg-primary px-2 py-1 text-xs font-bold text-secondary"
+        className="absolute rounded-md bg-primary px-2 py-1 text-xs font-bold text-primary-foreground"
         style={position}
       >
+        {value > 0 ? "+" : "-"}
         {Math.abs(value)}px
       </div>
     );
@@ -121,7 +121,7 @@ export default function GenFill() {
 
   async function generate() {
     dispatch(generationStarted());
-    const toastId = toast.loading("Generating...");
+    const toastId = toast.loading("Processing...");
 
     const res = await genFillAction({
       activeImageUrl: activeLayer.url!,
@@ -133,7 +133,7 @@ export default function GenFill() {
     const newLayerId = crypto.randomUUID();
 
     if (res?.data?.result) {
-      handleToastUpdate(toastId, "Image generated successfully", "success");
+      handleToastUpdate(toastId, "Processing completed", "success");
 
       dispatch(
         layerAdded({
@@ -160,7 +160,10 @@ export default function GenFill() {
 
   return (
     <Popover>
-      <PopoverTrigger disabled={!activeLayer.url} asChild>
+      <PopoverTrigger
+        disabled={!activeLayer.url || activeLayer.url.includes("e_extract")}
+        asChild
+      >
         <Button variant="outline" className="p-8">
           <span className="flex flex-col items-center justify-center gap-1 text-xs font-medium">
             {/* eslint-disable-next-line jsx-a11y/alt-text */}

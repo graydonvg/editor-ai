@@ -1,6 +1,6 @@
 import { Logger } from "next-axiom";
 import { checkImageProcessing } from "./check-processing";
-import { sleep } from "../utils";
+import { wait } from "../utils";
 
 export async function waitForImageProcessing(url: string, actionLog: Logger) {
   const maxAttempts = 5;
@@ -38,7 +38,7 @@ export async function waitForImageProcessing(url: string, actionLog: Logger) {
         nextCheckIn: `${delay / 1000}s`,
       });
 
-      await sleep(delay);
+      await wait(delay);
     } catch (error) {
       throw new Error("An unexpected error occurred during image processing");
     }

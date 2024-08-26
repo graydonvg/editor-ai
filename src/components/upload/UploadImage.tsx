@@ -12,6 +12,8 @@ import {
 import { activeLayerSet, layerUpdated } from "@/lib/redux/features/layerSlice";
 import { Flip, toast } from "react-toastify";
 import { handleToastUpdate } from "../ui/Toast";
+import Lottie from "lottie-react";
+import imageUpload from "../../../public/animations/image-upload.json";
 
 export default function UploadImage() {
   const dispatch = useAppDispatch();
@@ -93,6 +95,7 @@ export default function UploadImage() {
           <CardContent className="flex h-full flex-col items-center justify-center px-2 py-24 text-xs">
             <input {...getInputProps()} type="text" />
             <div className="flex flex-col items-center justify-center gap-2">
+              <Lottie animationData={imageUpload} className="h-48" />
               <p className="text-2xl text-muted-foreground">
                 {isDragActive
                   ? "Drop your image here!"

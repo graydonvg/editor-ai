@@ -37,7 +37,7 @@ export default function AreaExtract() {
 
   async function extractObject() {
     dispatch(generationStarted());
-    const toastId = toast.loading(`Extracting...`);
+    const toastId = toast.loading(`Processing...`);
 
     const promptData = prompts
       .map((prompt) => prompt.data)
@@ -55,7 +55,7 @@ export default function AreaExtract() {
     const newLayerId = crypto.randomUUID();
 
     if (res?.data?.result) {
-      handleToastUpdate(toastId, "Extraction successful", "success");
+      handleToastUpdate(toastId, "Processing completed", "success");
 
       dispatch(
         layerAdded({
