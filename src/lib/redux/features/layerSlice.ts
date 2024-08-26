@@ -47,12 +47,12 @@ const layerSlice = createSlice({
       state,
       action: PayloadAction<{
         id: LayerType["id"];
-        posterUrl: LayerType["posterUrl"];
+        thumbnailUrl: LayerType["thumbnailUrl"];
       }>,
     ) {
       state.layers = state.layers.map((layer) =>
         layer.id === action.payload.id
-          ? { ...layer, posterUrl: action.payload.posterUrl }
+          ? { ...layer, thumbnailUrl: action.payload.thumbnailUrl }
           : layer,
       );
     },

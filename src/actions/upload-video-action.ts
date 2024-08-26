@@ -8,44 +8,44 @@ import { z } from "zod";
 import { Logger } from "next-axiom";
 
 const log = new Logger();
-const actionLog = log.with({ context: "actions/upload-image-action" });
+const actionLog = log.with({ context: "actions/upload-video-action" });
 
 const formDataSchema = z.object({
-  image: z.instanceof(FormData),
+  video: z.instanceof(FormData),
 });
 
-export const uploadImageAction = actionClient
+export const uploadVideoAction = actionClient
   .schema(formDataSchema)
   .action(
     async ({
-      parsedInput: { image },
+      parsedInput: { video },
     }): Promise<ActionResult<UploadApiResponse, string>> => {
-      actionLog.info("Starting uploadImageAction");
+      actionLog.info("Starting uploadVideoAction");
 
-      const formImage = image.get("image") as File | null;
+      const formVideo = video.get("video") as File | null;
 
-      if (!formImage) {
-        const message = "No image provided";
+      if (!formVideo) {
+        const message = "No video provided";
         actionLog.warn(message);
         return { error: message };
       }
 
       try {
-        actionLog.info("Converting image file to buffer", {
-          fileName: formImage.name,
+        actionLog.info("Converting video file to buffer", {
+          fileName: formVideo.name,
         });
-        const buffer = Buffer.from(await formImage.arrayBuffer());
+        const buffer = Buffer.from(await formVideo.arrayBuffer());
 
-        actionLog.info("Uploading image", { fileName: formImage.name });
-        const result = await uploadImageToCloudinary(buffer, formImage.name);
+        actionLog.info("Uploading video", { fileName: formVideo.name });
+        const result = await uploadVideoToCloudinary(buffer, formVideo.name);
 
-        actionLog.info("Image uploaded successfully", {
+        actionLog.info("Video uploaded successfully", {
           publicId: result.public_id,
         });
 
         return { result };
       } catch (error) {
-        const message = "An unexpected error occurred during image upload";
+        const message = "An unexpected error occurred during video upload";
 
         actionLog.error(message, { error });
 
@@ -56,7 +56,7 @@ export const uploadImageAction = actionClient
     },
   );
 
-function uploadImageToCloudinary(
+function uploadVideoToCloudinary(
   buffer: Buffer,
   fileName: string,
 ): Promise<UploadApiResponse> {
@@ -64,6 +64,7 @@ function uploadImageToCloudinary(
     cloudinary.uploader
       .upload_stream(
         {
+          resource_type: "image",
           use_filename: true,
           unique_filename: false,
           filename_override: fileName,

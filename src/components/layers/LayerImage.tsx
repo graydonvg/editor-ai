@@ -14,7 +14,7 @@ export default function LayerImage({ layer }: Props) {
             <Image
               src={
                 layer.format === "mp4"
-                  ? layer.posterUrl || layer.url
+                  ? layer.thumbnailUrl || layer.url
                   : layer.url
               }
               alt={layer.name}

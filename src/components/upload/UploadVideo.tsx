@@ -1,6 +1,5 @@
 "use client";
 
-import { uploadImageAction } from "@/actions/upload-image-action";
 import { useDropzone } from "react-dropzone";
 import { Card, CardContent } from "../ui/Card";
 import { cn } from "@/lib/utils";
@@ -10,63 +9,50 @@ import {
   generationStopped,
 } from "@/lib/redux/features/imageSlice";
 import { activeLayerSet, layerUpdated } from "@/lib/redux/features/layerSlice";
-import { Flip, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { handleToastUpdate } from "../ui/Toast";
 import Lottie from "lottie-react";
-import imageUpload from "../../../public/animations/image-upload.json";
+import imageUpload from "../../../public/animations/video-upload.json";
+import { uploadVideoAction } from "@/actions/upload-video-action";
 
-export default function UploadImage() {
+export default function UploadVideo() {
   const dispatch = useAppDispatch();
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     maxFiles: 1,
     accept: {
-      "image/png": [".png"],
-      "image/jpg": [".jpg"],
-      "image/jpeg": [".jpeg"],
-      "image/webp": [".webp"],
+      "video/mp4": [".mp4", ".MP4"],
     },
     onDrop: async (acceptedFiles, fileRejections) => {
       if (acceptedFiles.length) {
         const toastId = toast.loading("Uploading...");
 
         const formData = new FormData();
-        formData.append("image", acceptedFiles[0]);
-
-        const objectUrl = URL.createObjectURL(acceptedFiles[0]);
+        formData.append("video", acceptedFiles[0]);
 
         dispatch(generationStarted());
 
-        dispatch(
-          layerUpdated({
-            id: activeLayer.id,
-            url: objectUrl,
-            name: acceptedFiles[0].name,
-            width: 0,
-            height: 0,
-            publicId: "",
-            format: "",
-            resourceType: "image",
-          }),
-        );
-
         dispatch(activeLayerSet(activeLayer.id));
 
-        const res = await uploadImageAction({ image: formData });
+        const res = await uploadVideoAction({ video: formData });
 
         if (res?.data?.result) {
           handleToastUpdate(toastId, "Upload successful", "success");
 
+          const videoUrl = res.data.result.url;
+          const videoThumbnailUrl = videoUrl.replace(/\.[^/.]+$/, ".jpg");
+
           dispatch(
             layerUpdated({
               id: activeLayer.id,
-              url: res.data.result.url,
+              url: videoUrl,
               name: res.data.result.original_filename,
               width: res.data.result.width,
               height: res.data.result.height,
               publicId: res.data.result.public_id,
               format: res.data.result.format,
               resourceType: res.data.result.resource_type,
+              thumbnailUrl: videoThumbnailUrl,
             }),
           );
 
@@ -100,12 +86,10 @@ export default function UploadImage() {
               <Lottie animationData={imageUpload} className="h-48" />
               <p className="text-2xl text-muted-foreground">
                 {isDragActive
-                  ? "Drop your image here!"
-                  : "Start by uploading an image"}
+                  ? "Drop your video here!"
+                  : "Start by uploading a video"}
               </p>
-              <p className="text-muted-foreground">
-                Supported formats .jpg .jpeg .png .webp
-              </p>
+              <p className="text-muted-foreground">Supported formats .mp4</p>
             </div>
           </CardContent>
         </Card>
