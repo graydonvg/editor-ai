@@ -1,7 +1,7 @@
 import { useAppSelector } from "@/lib/redux/hooks";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import ImageComparison from "./layers/ImageComparison";
+import ImageComparison from "./ImageComparison";
 
 export default function ActiveImage() {
   const isGenerating = useAppSelector((state) => state.image.isGenerating);

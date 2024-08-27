@@ -1,6 +1,10 @@
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
-import { Button } from "../ui/Button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/Popover";
+import { Button } from "@/components/ui/Button";
 import { Info, Scissors, Trash2 } from "lucide-react";
 import { activeLayerSet, layerAdded } from "@/lib/redux/features/layerSlice";
 import {
@@ -8,19 +12,19 @@ import {
   generationStopped,
 } from "@/lib/redux/features/imageSlice";
 import { toast } from "react-toastify";
-import { handleToastUpdate } from "../ui/Toast";
-import { Label } from "../ui/Label";
-import { Input } from "../ui/Input";
+import { handleToastUpdate } from "@/components/ui/Toast";
+import { Label } from "@/components/ui/Label";
+import { Input } from "@/components/ui/Input";
 import { useState } from "react";
-import { Checkbox } from "../ui/Checkbox";
-import { RadioGroup, RadioGroupItem } from "../ui/RadioGroup";
+import { Checkbox } from "@/components/ui/Checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/RadioGroup";
 import { areaExtractAction } from "@/actions/area-extract-action";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../ui/Tooltip";
+} from "@/components/ui/Tooltip";
 
 export default function AreaExtract() {
   const dispatch = useAppDispatch();

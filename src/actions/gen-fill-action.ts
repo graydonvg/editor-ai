@@ -5,7 +5,6 @@ import { ActionResult } from "@/lib/types";
 import { z } from "zod";
 import { Logger } from "next-axiom";
 import { waitForImageProcessing } from "@/lib/processing/wait-for-processing";
-import cloudinary from "@/lib/cloudinary";
 
 const log = new Logger();
 const actionLog = log.with({ context: "actions/gen-fill-action" });

@@ -1,6 +1,4 @@
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
-import { Button } from "../ui/Button";
 import { ImageOff } from "lucide-react";
 import { activeLayerSet, layerAdded } from "@/lib/redux/features/layerSlice";
 import {
@@ -9,7 +7,13 @@ import {
 } from "@/lib/redux/features/imageSlice";
 import { bgRemoveAction } from "@/actions/bg-remove-action";
 import { toast } from "react-toastify";
-import { handleToastUpdate } from "../ui/Toast";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/Popover";
+import { handleToastUpdate } from "@/components/ui/Toast";
+import { Button } from "@/components/ui/Button";
 
 export default function BgRemove() {
   const dispatch = useAppDispatch();

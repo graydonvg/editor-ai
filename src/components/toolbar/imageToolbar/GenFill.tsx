@@ -1,6 +1,10 @@
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
-import { Button } from "../ui/Button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/Popover";
+import { Button } from "@/components/ui/Button";
 import { ArrowRight, Crop } from "lucide-react";
 import { activeLayerSet, layerAdded } from "@/lib/redux/features/layerSlice";
 import {
@@ -8,11 +12,11 @@ import {
   generationStopped,
 } from "@/lib/redux/features/imageSlice";
 import { toast } from "react-toastify";
-import { handleToastUpdate } from "../ui/Toast";
+import { handleToastUpdate } from "@/components/ui/Toast";
 import { useMemo, useState } from "react";
-import { Label } from "../ui/Label";
-import { Input } from "../ui/Input";
-import { genFillAction } from "@/actions/gen-fill";
+import { Label } from "@/components/ui/Label";
+import { Input } from "@/components/ui/Input";
+import { genFillAction } from "@/actions/gen-fill-action";
 
 type Dimensions = {
   width: number;
@@ -30,7 +34,7 @@ export default function GenFill() {
   const [newDimensions, setNewDimensions] =
     useState<Dimensions>(DEFAULT_DIMENSIONS);
 
-  const previewStyle = useMemo(() => {
+  function computePreviewStyle() {
     if (!activeLayer.width || !activeLayer.height || !activeLayer.url)
       return {};
 
@@ -47,9 +51,9 @@ export default function GenFill() {
       backgroundRepeat: "no-repeat",
       position: "relative" as const,
     };
-  }, [activeLayer, newDimensions.width, newDimensions.height]);
+  }
 
-  const previewOverlayStyle = useMemo(() => {
+  function computePreviewOverlayStyle() {
     if (!activeLayer.width || !activeLayer.height || !activeLayer.url)
       return {};
 
@@ -78,11 +82,11 @@ export default function GenFill() {
       right: "0",
       bottom: "0",
       boxShadow: `inset ${leftWidth} ${topHeight} 0 rgba(48, 119, 255, 1),
-			inset -${rightWidth} ${topHeight} 0 rgba(48, 119, 255, 1),
-			inset ${leftWidth} -${bottomHeight} 0 rgba(48, 119, 255, 1),
-			inset ${leftWidth} -${bottomHeight} 0 rgba(48, 119, 255, 1)`,
+  		inset -${rightWidth} ${topHeight} 0 rgba(48, 119, 255, 1),
+  		inset ${leftWidth} -${bottomHeight} 0 rgba(48, 119, 255, 1),
+  		inset ${leftWidth} -${bottomHeight} 0 rgba(48, 119, 255, 1)`,
     };
-  }, [activeLayer, newDimensions.width, newDimensions.height]);
+  }
 
   function ExpansionIndicator({
     value,
@@ -242,8 +246,11 @@ export default function GenFill() {
           }}
           className="preview-container m-auto flex flex-grow items-center justify-center overflow-hidden"
         >
-          <div style={previewStyle}>
-            <div style={previewOverlayStyle} className="animate-pulse"></div>
+          <div style={computePreviewStyle()}>
+            <div
+              style={computePreviewOverlayStyle()}
+              className="animate-pulse"
+            ></div>
             <ExpansionIndicator value={newDimensions.width} axis="x" />
             <ExpansionIndicator value={newDimensions.height} axis="y" />
           </div>

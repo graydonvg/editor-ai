@@ -1,9 +1,13 @@
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
-import { Button } from "../ui/Button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/Popover";
+import { Button } from "@/components/ui/Button";
 import { Eraser } from "lucide-react";
-import { Label } from "../ui/Label";
-import { Input } from "../ui/Input";
+import { Label } from "@/components/ui/Label";
+import { Input } from "@/components/ui/Input";
 import { useState } from "react";
 import { activeLayerSet, layerAdded } from "@/lib/redux/features/layerSlice";
 import {
@@ -12,7 +16,7 @@ import {
 } from "@/lib/redux/features/imageSlice";
 import { genRemoveAction } from "@/actions/gen-remove-action";
 import { toast } from "react-toastify";
-import { handleToastUpdate } from "../ui/Toast";
+import { handleToastUpdate } from "@/components/ui/Toast";
 
 export default function GenRemove() {
   const dispatch = useAppDispatch();

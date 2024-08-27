@@ -1,6 +1,10 @@
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
-import { Button } from "../ui/Button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/Popover";
+import { Button } from "@/components/ui/Button";
 import { Image } from "lucide-react";
 import { activeLayerSet, layerAdded } from "@/lib/redux/features/layerSlice";
 import {
@@ -8,10 +12,10 @@ import {
   generationStopped,
 } from "@/lib/redux/features/imageSlice";
 import { toast } from "react-toastify";
-import { handleToastUpdate } from "../ui/Toast";
+import { handleToastUpdate } from "@/components/ui/Toast";
 import { bgReplaceAction } from "@/actions/bg-replace-action";
-import { Label } from "../ui/Label";
-import { Input } from "../ui/Input";
+import { Label } from "@/components/ui/Label";
+import { Input } from "@/components/ui/Input";
 import { useState } from "react";
 
 export default function BgReplace() {

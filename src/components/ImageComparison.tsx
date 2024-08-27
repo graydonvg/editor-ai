@@ -30,17 +30,22 @@ export default function ImageComparison() {
     );
   }
 
-  const bgRemovalKeywords = ["background_removal", "e_extract"];
+  const priorityKeywords = ["background_removal", "e_extract", "b_gen_fill"];
 
-  function hasBgRemoved(url?: string) {
-    return bgRemovalKeywords.some((keyword) => url?.includes(keyword));
+  function hasPriorityKeyword(url?: string) {
+    return priorityKeywords.some((keyword) => url?.includes(keyword));
   }
 
   let layersToCompare = comparisonLayers;
 
-  if (comparisonLayers.some((layer) => hasBgRemoved(layer.url))) {
+  if (comparisonLayers.some((layer) => hasPriorityKeyword(layer.url))) {
+    // Some images must come first; otherwise, the original image covers the effects applied to the other.
+
     layersToCompare = [...comparisonLayers].sort((a, b) => {
-      return hasBgRemoved(a.url) ? -1 : hasBgRemoved(b.url) ? 1 : 0;
+      if (a.url?.includes("background_removal")) return -1;
+      if (b.url?.includes("background_removal")) return 1;
+
+      return hasPriorityKeyword(a.url) ? -1 : hasPriorityKeyword(b.url) ? 1 : 0;
     });
   }
 
