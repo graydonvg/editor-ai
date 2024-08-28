@@ -89,7 +89,7 @@ export default function BgReplace() {
         side="right"
         align="start"
       >
-        <h3 className="font-medium leading-none">
+        <h3 className="text-lg font-medium leading-none">
           Generative Background Replace
         </h3>
         <p className="text-sm text-muted-foreground">

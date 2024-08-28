@@ -4,7 +4,7 @@ import { actionClient } from "@/lib/safe-action";
 import { ActionResult } from "@/lib/types";
 import { z } from "zod";
 import { Logger } from "next-axiom";
-import { waitForImageProcessing } from "@/lib/processing/wait-for-processing";
+import { waitForResourceProcessing } from "@/lib/processing/wait-for-processing";
 
 const log = new Logger();
 const actionLog = log.with({ context: "actions/bg-replace-action" });
@@ -28,7 +28,7 @@ export const bgReplaceAction = actionClient
       try {
         const bgReplaceUrl = constructUrl({ activeImageUrl, prompt });
 
-        await waitForImageProcessing(bgReplaceUrl, actionLog);
+        await waitForResourceProcessing(bgReplaceUrl, "Image", actionLog);
 
         return { result: bgReplaceUrl };
       } catch (error) {

@@ -1,4 +1,4 @@
-export async function checkImageProcessing(url: string) {
+export async function checkResourceProcessing(url: string) {
   try {
     const response = await fetch(url);
 

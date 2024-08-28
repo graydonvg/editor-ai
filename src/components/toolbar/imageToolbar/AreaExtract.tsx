@@ -119,7 +119,7 @@ export default function AreaExtract() {
         side="right"
         align="center"
       >
-        <h3 className="font-medium leading-none">Area Extract</h3>
+        <h3 className="text-lg font-medium leading-none">Area Extract</h3>
         <p className="text-sm text-muted-foreground">
           Extract specific areas of an image using natural language prompts.
         </p>

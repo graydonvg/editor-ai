@@ -78,7 +78,7 @@ export default function GenRemove() {
         side="right"
         align="start"
       >
-        <h3 className="font-medium leading-none">Generative Remove</h3>
+        <h3 className="text-lg font-medium leading-none">Generative Remove</h3>
         <p className="text-sm text-muted-foreground">
           Remove unwanted objects, text, or user-defined regions from images.
         </p>

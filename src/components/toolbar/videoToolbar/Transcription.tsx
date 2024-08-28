@@ -75,7 +75,9 @@ export default function Transcription() {
         side="right"
         align="start"
       >
-        <h3 className="font-medium leading-none">Video Transcription</h3>
+        <h3 className="text-lg font-medium leading-none">
+          Video Transcription
+        </h3>
         <p className="text-pretty text-sm text-muted-foreground">
           Automatically generate subtitles from spoken audio. Convert speech
           into text and seamlessly integrate it as subtitles directly onto your

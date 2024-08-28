@@ -1,22 +1,27 @@
 import { Logger } from "next-axiom";
-import { checkImageProcessing } from "./check-processing";
+import { checkResourceProcessing } from "./check-processing";
 import { wait } from "../utils";
 
-export async function waitForImageProcessing(url: string, actionLog: Logger) {
-  const maxAttempts = 5;
-  const initialDelay = 1000;
+export async function waitForResourceProcessing(
+  url: string,
+  resource: "Image" | "Video",
+  actionLog: Logger,
+) {
+  const maxAttempts = 10;
+  const maxDelay = 15000;
+  const initialDelay = resource === "Image" ? 1000 : 2000;
 
-  actionLog.info("Starting image processing check", {
+  actionLog.info(`Starting ${resource} processing check`, {
     url,
     maxAttempts,
   });
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const isProcessed = await checkImageProcessing(url);
+      const isProcessed = await checkResourceProcessing(url);
 
       if (isProcessed) {
-        actionLog.info("Image processed successfully", {
+        actionLog.info(`${resource} processed successfully`, {
           attempt,
           url,
         });
@@ -26,13 +31,14 @@ export async function waitForImageProcessing(url: string, actionLog: Logger) {
 
       if (attempt === maxAttempts) {
         throw new Error(
-          "Unable to process image after multiple attempts. Please try again later.",
+          `Unable to process ${resource.toLowerCase()} after multiple attempts. Please try again later.`,
         );
       }
 
-      const delay = initialDelay * Math.pow(2, attempt - 1);
+      let delay = initialDelay * Math.pow(2, attempt - 1);
+      delay = Math.min(delay, maxDelay);
 
-      actionLog.warn("Image not yet processed, retrying...", {
+      actionLog.warn(`${resource} not yet processed, retrying...`, {
         attempt,
         url,
         nextCheckIn: `${delay / 1000}s`,

@@ -4,7 +4,7 @@ import { actionClient } from "@/lib/safe-action";
 import { ActionResult } from "@/lib/types";
 import { z } from "zod";
 import { Logger } from "next-axiom";
-import { waitForImageProcessing } from "@/lib/processing/wait-for-processing";
+import { waitForResourceProcessing } from "@/lib/processing/wait-for-processing";
 
 const log = new Logger();
 const actionLog = log.with({ context: "actions/gen-remove-action" });
@@ -28,7 +28,7 @@ export const genRemoveAction = actionClient
       try {
         const genRemoveUrl = constructUrl({ activeImageUrl, prompt });
 
-        await waitForImageProcessing(genRemoveUrl, actionLog);
+        await waitForResourceProcessing(genRemoveUrl, "Image", actionLog);
 
         return { result: genRemoveUrl };
       } catch (error) {

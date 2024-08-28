@@ -36,12 +36,7 @@ export const uploadVideoAction = actionClient
         });
         const buffer = Buffer.from(await formVideo.arrayBuffer());
 
-        actionLog.info("Uploading video", { fileName: formVideo.name });
         const result = await uploadVideoToCloudinary(buffer, formVideo.name);
-
-        actionLog.info("Video uploaded successfully", {
-          publicId: result.public_id,
-        });
 
         return { result };
       } catch (error) {
@@ -66,6 +61,8 @@ function uploadVideoToCloudinary(
   buffer: Buffer,
   fileName: string,
 ): Promise<UploadApiResponse> {
+  actionLog.info("Uploading video", { fileName });
+
   return new Promise((resolve, reject) => {
     cloudinary.uploader
       .upload_stream(
@@ -78,8 +75,12 @@ function uploadVideoToCloudinary(
         (error, result) => {
           if (error) {
             actionLog.error("Error during upload stream", { error });
-            return reject(error);
+            return reject(error as UploadApiErrorResponse);
           }
+
+          actionLog.info("Video uploaded successfully", {
+            publicId: result?.public_id,
+          });
 
           resolve(result as UploadApiResponse);
         },

@@ -18,11 +18,6 @@ import { Label } from "@/components/ui/Label";
 import { Input } from "@/components/ui/Input";
 import { genFillAction } from "@/actions/gen-fill-action";
 
-type Dimensions = {
-  width: number;
-  height: number;
-};
-
 const DEFAULT_DIMENSIONS = { width: 0, height: 0 };
 const PREVIEW_SIZE = 300;
 const EXPANSION_THRESHOLD = 1;
@@ -33,8 +28,7 @@ export default function GenFill() {
   const isGenerating = useAppSelector((state) => state.image.isGenerating);
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [newDimensions, setNewDimensions] =
-    useState<Dimensions>(DEFAULT_DIMENSIONS);
+  const [newDimensions, setNewDimensions] = useState(DEFAULT_DIMENSIONS);
 
   function computePreviewStyle() {
     if (!activeLayer.width || !activeLayer.height || !activeLayer.url)
@@ -189,7 +183,7 @@ export default function GenFill() {
         side="right"
         align="start"
       >
-        <h3 className="font-medium leading-none">Generative Fill</h3>
+        <h3 className="text-lg font-medium leading-none">Generative Fill</h3>
         <p className="text-sm text-muted-foreground">
           Use AI to seamlessly expand or crop your images, integrating new
           content that matches the original.

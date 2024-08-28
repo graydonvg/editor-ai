@@ -4,7 +4,7 @@ import { actionClient } from "@/lib/safe-action";
 import { ActionResult } from "@/lib/types";
 import { z } from "zod";
 import { Logger } from "next-axiom";
-import { waitForImageProcessing } from "@/lib/processing/wait-for-processing";
+import { waitForResourceProcessing } from "@/lib/processing/wait-for-processing";
 
 const log = new Logger();
 const actionLog = log.with({ context: "actions/area-extract-action" });
@@ -43,7 +43,7 @@ export const areaExtractAction = actionClient
           format,
         });
 
-        await waitForImageProcessing(areaExtractUrl, actionLog);
+        await waitForResourceProcessing(areaExtractUrl, "Image", actionLog);
 
         return { result: areaExtractUrl };
       } catch (error) {

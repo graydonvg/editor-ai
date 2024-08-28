@@ -7,39 +7,36 @@ import { Logger } from "next-axiom";
 import { waitForResourceProcessing } from "@/lib/processing/wait-for-processing";
 
 const log = new Logger();
-const actionLog = log.with({ context: "actions/gen-fill-action" });
+const actionLog = log.with({ context: "actions/crop-video-action" });
 
-const genFillSchema = z.object({
-  activeImageUrl: z.string(),
+const cropVideoSchema = z.object({
+  activeVideoUrl: z.string(),
   aspectRatio: z.string(),
-  width: z.number(),
   height: z.number(),
 });
 
-export const genFillAction = actionClient
-  .schema(genFillSchema)
+export const cropVideoAction = actionClient
+  .schema(cropVideoSchema)
   .action(
     async ({
-      parsedInput: { activeImageUrl, aspectRatio, width, height },
+      parsedInput: { activeVideoUrl, aspectRatio, height },
     }): Promise<ActionResult<string, string>> => {
-      actionLog.info("Starting genFillAction", {
-        activeImageUrl,
+      actionLog.info("Starting cropVideoAction", {
+        activeVideoUrl,
         aspectRatio,
-        width,
         height,
       });
 
       try {
-        const genFillUrl = constructUrl({
-          activeImageUrl,
+        const cropVideoUrl = constructUrl({
+          activeVideoUrl,
           aspectRatio,
-          width,
           height,
         });
 
-        await waitForResourceProcessing(genFillUrl, "Image", actionLog);
+        await waitForResourceProcessing(cropVideoUrl, "Video", actionLog);
 
-        return { result: genFillUrl };
+        return { result: cropVideoUrl };
       } catch (error) {
         actionLog.error("An unexpected error occurred", {
           error,
@@ -58,19 +55,22 @@ export const genFillAction = actionClient
     },
   );
 
-function constructUrl(params: z.infer<typeof genFillSchema>) {
-  const { activeImageUrl, aspectRatio, width, height } = params;
-  const [baseUrl, imagePath] = activeImageUrl.split("/upload/");
+function constructUrl({
+  activeVideoUrl,
+  aspectRatio,
+  height,
+}: z.infer<typeof cropVideoSchema>) {
+  const [baseUrl, imagePath] = activeVideoUrl.split("/upload/");
 
   if (!baseUrl || !imagePath) {
     throw new Error("Invalid URL format");
   }
 
-  const genFillUrl = `${baseUrl}/upload/ar_${aspectRatio},b_gen_fill,c_pad,w_${width},h_${height}/${imagePath}`;
+  const cropVideoUrl = `${baseUrl}/upload/ar_${aspectRatio},c_fill,g_auto,h_${height}/${imagePath}`;
 
   actionLog.info("Constructed URL successfully", {
-    genFillUrl,
+    cropVideoUrl,
   });
 
-  return genFillUrl;
+  return cropVideoUrl;
 }

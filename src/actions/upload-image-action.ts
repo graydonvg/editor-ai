@@ -36,12 +36,7 @@ export const uploadImageAction = actionClient
         });
         const buffer = Buffer.from(await formImage.arrayBuffer());
 
-        actionLog.info("Uploading image", { fileName: formImage.name });
         const result = await uploadImageToCloudinary(buffer, formImage.name);
-
-        actionLog.info("Image uploaded successfully", {
-          publicId: result.public_id,
-        });
 
         return { result };
       } catch (error) {
@@ -67,6 +62,8 @@ function uploadImageToCloudinary(
   fileName: string,
 ): Promise<UploadApiResponse> {
   return new Promise((resolve, reject) => {
+    actionLog.info("Uploading image", { fileName });
+
     cloudinary.uploader
       .upload_stream(
         {
@@ -79,6 +76,10 @@ function uploadImageToCloudinary(
             actionLog.error("Error during upload stream", { error });
             return reject(error);
           }
+
+          actionLog.info("Image uploaded successfully", {
+            publicId: result?.public_id,
+          });
 
           resolve(result as UploadApiResponse);
         },
