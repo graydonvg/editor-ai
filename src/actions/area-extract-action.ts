@@ -47,7 +47,7 @@ export const areaExtractAction = actionClient
 
         return { result: areaExtractUrl };
       } catch (error) {
-        actionLog.error("Error during image processing", {
+        actionLog.error("An unexpected error occurred", {
           error,
         });
 
@@ -56,7 +56,7 @@ export const areaExtractAction = actionClient
         }
 
         return {
-          error: "An unexpected error occurred while processing the image",
+          error: "An unexpected error occurred. Please try again later.",
         };
       } finally {
         await log.flush();

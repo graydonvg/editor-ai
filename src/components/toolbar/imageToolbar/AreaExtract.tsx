@@ -26,6 +26,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/Tooltip";
 
+const DEFAULT_DETAILS = {
+  multiple: false,
+  mode: "content" as "content" | "mask",
+  invert: false,
+};
+
 export default function AreaExtract() {
   const dispatch = useAppDispatch();
   const isGenerating = useAppSelector((state) => state.image.isGenerating);
@@ -33,13 +39,11 @@ export default function AreaExtract() {
   const [prompts, setPrompts] = useState([
     { id: crypto.randomUUID(), data: "" },
   ]);
-  const [details, setDetails] = useState({
-    multiple: false,
-    mode: "content" as "content" | "mask",
-    invert: false,
-  });
+  const [details, setDetails] = useState(DEFAULT_DETAILS);
+  const [isExtracting, setIsExtracting] = useState(false);
 
   async function extractObject() {
+    setIsExtracting(true);
     dispatch(generationStarted());
     const toastId = toast.loading(`Processing...`);
 
@@ -47,7 +51,7 @@ export default function AreaExtract() {
       .map((prompt) => prompt.data)
       .filter((prompt) => prompt.trim() !== "");
 
-    const res = await areaExtractAction({
+    const result = await areaExtractAction({
       activeImageUrl: activeLayer.url!,
       prompts: promptData,
       multiple: details.multiple,
@@ -56,15 +60,15 @@ export default function AreaExtract() {
       format: activeLayer.format!,
     });
 
-    const newLayerId = crypto.randomUUID();
+    if (result?.data?.result) {
+      const newLayerId = crypto.randomUUID();
 
-    if (res?.data?.result) {
       handleToastUpdate(toastId, "Processing completed", "success");
 
       dispatch(
         layerAdded({
           id: newLayerId,
-          url: res?.data?.result,
+          url: result.data.result,
           name: "bg-replaced-" + activeLayer.name,
           format: "png",
           height: activeLayer.height,
@@ -77,10 +81,11 @@ export default function AreaExtract() {
       dispatch(activeLayerSet(newLayerId));
     }
 
-    if (res?.data?.error) {
-      handleToastUpdate(toastId, res.data.error, "error");
+    if (result?.data?.error) {
+      handleToastUpdate(toastId, result.data.error, "error");
     }
 
+    setIsExtracting(false);
     dispatch(generationStopped());
   }
 
@@ -250,11 +255,11 @@ export default function AreaExtract() {
           </div>
         </div>
         <Button
-          disabled={!activeLayer.url || isGenerating}
+          disabled={!activeLayer.url || isExtracting || isGenerating}
           onClick={extractObject}
           className="w-full"
         >
-          {isGenerating ? "Extracting..." : "Extract"}
+          {isExtracting ? "Extracting..." : "Extract"}
         </Button>
       </PopoverContent>
     </Popover>

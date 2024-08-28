@@ -36,7 +36,7 @@ export default function LayerInfo({ layer, layerIndex }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" aria-label="View layer details">
           <Ellipsis size={14} />
         </Button>
       </DialogTrigger>

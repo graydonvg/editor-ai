@@ -11,7 +11,7 @@ export type LayerType = {
   width: number;
   height: number;
   publicId?: string;
-  thumbnailUrl?: string;
+  posterUrl?: string;
   resourceType?: string;
   transcriptionUrl?: string;
 };

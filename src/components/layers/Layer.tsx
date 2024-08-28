@@ -58,7 +58,12 @@ export default function Layer({ layer, layerIndex }: Props) {
       )}
     >
       <div className="relative flex items-center p-4">
-        <button {...attributes} {...listeners} className="mr-2 cursor-grab">
+        <button
+          {...attributes}
+          {...listeners}
+          className="mr-2 cursor-grab"
+          aria-label="Draggable handle"
+        >
           <GripVertical size={18} />
         </button>
         <div className="flex h-8 w-full items-center justify-between">

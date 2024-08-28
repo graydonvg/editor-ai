@@ -52,29 +52,29 @@ export default function UploadImage() {
 
         dispatch(activeLayerSet(activeLayer.id));
 
-        const res = await uploadImageAction({ image: formData });
+        const result = await uploadImageAction({ image: formData });
 
-        if (res?.data?.result) {
+        if (result?.data?.result) {
           handleToastUpdate(toastId, "Upload successful", "success");
 
           dispatch(
             layerUpdated({
               id: activeLayer.id,
-              url: res.data.result.url,
-              name: res.data.result.original_filename,
-              width: res.data.result.width,
-              height: res.data.result.height,
-              publicId: res.data.result.public_id,
-              format: res.data.result.format,
-              resourceType: res.data.result.resource_type,
+              url: result.data.result.url,
+              name: result.data.result.original_filename,
+              width: result.data.result.width,
+              height: result.data.result.height,
+              publicId: result.data.result.public_id,
+              format: result.data.result.format,
+              resourceType: result.data.result.resource_type,
             }),
           );
 
           dispatch(activeLayerSet(activeLayer.id));
         }
 
-        if (res?.data?.error) {
-          handleToastUpdate(toastId, res.data.error, "error");
+        if (result?.data?.error) {
+          handleToastUpdate(toastId, result.data.error, "error");
         }
 
         dispatch(generationStopped());

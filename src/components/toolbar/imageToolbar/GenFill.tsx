@@ -26,11 +26,13 @@ type Dimensions = {
 const DEFAULT_DIMENSIONS = { width: 0, height: 0 };
 const PREVIEW_SIZE = 300;
 const EXPANSION_THRESHOLD = 1;
+const BUTTON_DISABLED_KEYWORDS = ["e_extract", "background_removal"];
 
 export default function GenFill() {
   const dispatch = useAppDispatch();
   const isGenerating = useAppSelector((state) => state.image.isGenerating);
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [newDimensions, setNewDimensions] =
     useState<Dimensions>(DEFAULT_DIMENSIONS);
 
@@ -124,25 +126,26 @@ export default function GenFill() {
   }
 
   async function generate() {
+    setIsProcessing(true);
     dispatch(generationStarted());
     const toastId = toast.loading("Processing...");
 
-    const res = await genFillAction({
+    const result = await genFillAction({
       activeImageUrl: activeLayer.url!,
       aspectRatio: "1:1",
       width: newDimensions.width + activeLayer.width,
       height: newDimensions.height + activeLayer.height,
     });
 
-    const newLayerId = crypto.randomUUID();
+    if (result?.data?.result) {
+      const newLayerId = crypto.randomUUID();
 
-    if (res?.data?.result) {
       handleToastUpdate(toastId, "Processing completed", "success");
 
       dispatch(
         layerAdded({
           id: newLayerId,
-          url: res?.data?.result,
+          url: result.data.result,
           name: "gen-filled-" + activeLayer.name,
           format: activeLayer.format,
           height: activeLayer.height + newDimensions.height,
@@ -155,17 +158,23 @@ export default function GenFill() {
       dispatch(activeLayerSet(newLayerId));
     }
 
-    if (res?.data?.error) {
-      handleToastUpdate(toastId, res.data.error, "error");
+    if (result?.data?.error) {
+      handleToastUpdate(toastId, result.data.error, "error");
     }
 
+    setIsProcessing(false);
     dispatch(generationStopped());
   }
 
   return (
     <Popover>
       <PopoverTrigger
-        disabled={!activeLayer.url || activeLayer.url.includes("e_extract")}
+        disabled={
+          !activeLayer.url ||
+          BUTTON_DISABLED_KEYWORDS.some((keyword) =>
+            activeLayer.url?.includes(keyword),
+          )
+        }
         asChild
       >
         <Button variant="outline" className="p-8">
@@ -256,11 +265,18 @@ export default function GenFill() {
           </div>
         </div>
         <Button
-          disabled={!activeLayer.url || isGenerating}
+          disabled={
+            !activeLayer.url ||
+            isGenerating ||
+            isProcessing ||
+            BUTTON_DISABLED_KEYWORDS.some((keyword) =>
+              activeLayer.url?.includes(keyword),
+            )
+          }
           onClick={generate}
           className="w-full"
         >
-          {isGenerating ? "Generating..." : "Generate"}
+          {isProcessing ? "Generating..." : "Generate"}
         </Button>
       </PopoverContent>
     </Popover>

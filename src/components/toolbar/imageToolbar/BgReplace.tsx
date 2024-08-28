@@ -18,30 +18,34 @@ import { Label } from "@/components/ui/Label";
 import { Input } from "@/components/ui/Input";
 import { useState } from "react";
 
+const BUTTON_DISABLED_KEYWORDS = ["mask", "background_removal"];
+
 export default function BgReplace() {
   const dispatch = useAppDispatch();
   const isGenerating = useAppSelector((state) => state.image.isGenerating);
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
   const [prompt, setPrompt] = useState("");
+  const [isReplacing, setIsReplacing] = useState(false);
 
   async function replaceBackground() {
+    setIsReplacing(true);
     dispatch(generationStarted());
     const toastId = toast.loading("Processing...");
 
-    const res = await bgReplaceAction({
+    const result = await bgReplaceAction({
       activeImageUrl: activeLayer.url!,
       prompt: activeLayer.format!,
     });
 
-    const newLayerId = crypto.randomUUID();
+    if (result?.data?.result) {
+      const newLayerId = crypto.randomUUID();
 
-    if (res?.data?.result) {
       handleToastUpdate(toastId, "Processing completed", "success");
 
       dispatch(
         layerAdded({
           id: newLayerId,
-          url: res?.data?.result,
+          url: result.data.result,
           name: "bg-replaced-" + activeLayer.name,
           format: activeLayer.format,
           height: activeLayer.height,
@@ -54,16 +58,25 @@ export default function BgReplace() {
       dispatch(activeLayerSet(newLayerId));
     }
 
-    if (res?.data?.error) {
-      handleToastUpdate(toastId, res.data.error, "error");
+    if (result?.data?.error) {
+      handleToastUpdate(toastId, result.data.error, "error");
     }
 
+    setIsReplacing(false);
     dispatch(generationStopped());
   }
 
   return (
     <Popover>
-      <PopoverTrigger disabled={!activeLayer.url} asChild>
+      <PopoverTrigger
+        disabled={
+          !activeLayer.url ||
+          BUTTON_DISABLED_KEYWORDS.some((keyword) =>
+            activeLayer.url?.includes(keyword),
+          )
+        }
+        asChild
+      >
         <Button variant="outline" className="p-8">
           <span className="flex flex-col items-center justify-center gap-1 text-xs font-medium">
             {/* eslint-disable-next-line jsx-a11y/alt-text */}
@@ -99,11 +112,18 @@ export default function BgReplace() {
             />
           </div>
           <Button
-            disabled={!activeLayer.url || isGenerating}
+            disabled={
+              !activeLayer.url ||
+              isGenerating ||
+              isReplacing ||
+              BUTTON_DISABLED_KEYWORDS.some((keyword) =>
+                activeLayer.url?.includes(keyword),
+              )
+            }
             onClick={replaceBackground}
             className="w-full"
           >
-            {isGenerating ? "Replacing..." : "Replace Background"}
+            {isReplacing ? "Replacing..." : "Replace Background"}
           </Button>
         </div>
       </PopoverContent>

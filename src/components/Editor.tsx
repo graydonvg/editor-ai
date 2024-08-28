@@ -1,6 +1,6 @@
 "use client";
 
-import ActiveImage from "./ActiveImage";
+import ActiveContentDisplay from "./ActiveContentDisplay";
 import Layers from "./layers/Layers";
 import UploadForm from "./upload/UploadForm";
 import Toolbar from "./toolbar/Toolbar";
@@ -10,7 +10,7 @@ export default function Editor() {
     <div className="flex h-full">
       <Toolbar />
       <UploadForm />
-      <ActiveImage />
+      <ActiveContentDisplay />
       <Layers />
     </div>
   );

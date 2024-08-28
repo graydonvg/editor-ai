@@ -26,7 +26,7 @@ export async function waitForImageProcessing(url: string, actionLog: Logger) {
 
       if (attempt === maxAttempts) {
         throw new Error(
-          "Image processing failed after multiple attempts. Please try again later.",
+          "Unable to process image after multiple attempts. Please try again later.",
         );
       }
 
@@ -40,7 +40,7 @@ export async function waitForImageProcessing(url: string, actionLog: Logger) {
 
       await wait(delay);
     } catch (error) {
-      throw new Error("An unexpected error occurred during image processing");
+      throw error;
     }
   }
 }

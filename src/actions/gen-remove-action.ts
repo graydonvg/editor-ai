@@ -32,7 +32,7 @@ export const genRemoveAction = actionClient
 
         return { result: genRemoveUrl };
       } catch (error) {
-        actionLog.error("Error during image processing", {
+        actionLog.error("An unexpected error occurred", {
           error,
         });
 
@@ -41,7 +41,7 @@ export const genRemoveAction = actionClient
         }
 
         return {
-          error: "An unexpected error occurred while processing the image",
+          error: "An unexpected error occurred. Please try again later.",
         };
       } finally {
         await log.flush();

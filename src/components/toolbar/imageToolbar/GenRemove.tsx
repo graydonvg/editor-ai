@@ -22,27 +22,29 @@ export default function GenRemove() {
   const dispatch = useAppDispatch();
   const isGenerating = useAppSelector((state) => state.image.isGenerating);
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
-  const [object, setObject] = useState("");
+  const [selection, setSelection] = useState("");
+  const [isRemoving, setIsRemoving] = useState(false);
 
   async function removeObject() {
+    setIsRemoving(true);
     dispatch(generationStarted());
     const toastId = toast.loading("Processing...");
 
-    const res = await genRemoveAction({
-      prompt: object,
+    const result = await genRemoveAction({
+      prompt: selection,
       activeImageUrl: activeLayer.url!,
     });
 
-    const newLayerId = crypto.randomUUID();
+    if (result?.data?.result) {
+      const newLayerId = crypto.randomUUID();
 
-    if (res?.data?.result) {
       handleToastUpdate(toastId, "Processing completed", "success");
 
       dispatch(
         layerAdded({
           id: newLayerId,
-          url: res?.data?.result,
-          name: `${object}-removed-` + activeLayer.name,
+          url: result.data.result,
+          name: "gen-removed-" + activeLayer.name,
           format: activeLayer.format,
           height: activeLayer.height,
           width: activeLayer.width,
@@ -54,10 +56,11 @@ export default function GenRemove() {
       dispatch(activeLayerSet(newLayerId));
     }
 
-    if (res?.data?.error) {
-      handleToastUpdate(toastId, res.data.error, "error");
+    if (result?.data?.error) {
+      handleToastUpdate(toastId, result.data.error, "error");
     }
 
+    setIsRemoving(false);
     dispatch(generationStopped());
   }
 
@@ -80,27 +83,29 @@ export default function GenRemove() {
           Remove unwanted objects, text, or user-defined regions from images.
         </p>
         <p className="text-sm text-muted-foreground">
-          Specify the objects you want to remove by using a short prompt like:
+          Specify the item you want to remove by using a short prompt like:
           fork, text, mountain, etc.
         </p>
         <div className="flex flex-col space-y-4">
           <div className="flex items-center space-x-2">
-            <Label htmlFor="object">Object:</Label>
+            <Label htmlFor="selection">Selection:</Label>
             <Input
-              id="object"
-              value={object}
-              onChange={(e) => setObject(e.target.value)}
+              id="selection"
+              value={selection}
+              onChange={(e) => setSelection(e.target.value)}
               disabled={isGenerating}
               className="h-8"
-              placeholder="Enter 1 object at a time"
+              placeholder="Enter 1 item at a time"
             />
           </div>
           <Button
-            disabled={!activeLayer.url || !object || isGenerating}
+            disabled={
+              !activeLayer.url || !selection || isGenerating || isRemoving
+            }
             onClick={removeObject}
             className="w-full"
           >
-            {isGenerating ? "Removing..." : "Remove Object"}
+            {isRemoving ? "Removing..." : "Remove Object"}
           </Button>
         </div>
       </PopoverContent>

@@ -14,30 +14,35 @@ import {
 } from "@/components/ui/Popover";
 import { handleToastUpdate } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
+import { useState } from "react";
+
+const BUTTON_DISABLED_KEYWORDS = ["mask", "background_removal"];
 
 export default function BgRemove() {
   const dispatch = useAppDispatch();
   const isGenerating = useAppSelector((state) => state.image.isGenerating);
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
+  const [isRemoving, setIsRemoving] = useState(false);
 
   async function removeBackground() {
+    setIsRemoving(true);
     dispatch(generationStarted());
     const toastId = toast.loading("Processing...");
 
-    const res = await bgRemoveAction({
+    const result = await bgRemoveAction({
       activeImageUrl: activeLayer.url!,
       format: activeLayer.format!,
     });
 
-    const newLayerId = crypto.randomUUID();
+    if (result?.data?.result) {
+      const newLayerId = crypto.randomUUID();
 
-    if (res?.data?.result) {
       handleToastUpdate(toastId, "Processing completed", "success");
 
       dispatch(
         layerAdded({
           id: newLayerId,
-          url: res?.data?.result,
+          url: result.data.result,
           name: "bg-removed-" + activeLayer.name,
           format: "png",
           height: activeLayer.height,
@@ -50,16 +55,25 @@ export default function BgRemove() {
       dispatch(activeLayerSet(newLayerId));
     }
 
-    if (res?.data?.error) {
-      handleToastUpdate(toastId, res.data.error, "error");
+    if (result?.data?.error) {
+      handleToastUpdate(toastId, result.data.error, "error");
     }
 
+    setIsRemoving(false);
     dispatch(generationStopped());
   }
 
   return (
     <Popover>
-      <PopoverTrigger disabled={!activeLayer.url} asChild>
+      <PopoverTrigger
+        disabled={
+          !activeLayer.url ||
+          BUTTON_DISABLED_KEYWORDS.some((keyword) =>
+            activeLayer.url?.includes(keyword),
+          )
+        }
+        asChild
+      >
         <Button variant="outline" className="p-8">
           <span className="flex flex-col items-center justify-center gap-1 text-xs font-medium">
             {/* eslint-disable-next-line jsx-a11y/alt-text */}
@@ -77,11 +91,18 @@ export default function BgRemove() {
           Remove the background of an image with one simple click.
         </p>
         <Button
-          disabled={!activeLayer.url || isGenerating}
+          disabled={
+            !activeLayer.url ||
+            isGenerating ||
+            isRemoving ||
+            BUTTON_DISABLED_KEYWORDS.some((keyword) =>
+              activeLayer.url?.includes(keyword),
+            )
+          }
           onClick={removeBackground}
           className="w-full"
         >
-          {isGenerating ? "Removing..." : "Remove Background"}
+          {isRemoving ? "Removing..." : "Remove Background"}
         </Button>
       </PopoverContent>
     </Popover>

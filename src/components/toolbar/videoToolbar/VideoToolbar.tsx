@@ -1,9 +1,9 @@
-import VideoTranscription from "./VideoTranscription";
+import Transcription from "./Transcription";
 
 export default function VideoToolbar() {
   return (
     <>
-      <VideoTranscription />
+      <Transcription />
     </>
   );
 }

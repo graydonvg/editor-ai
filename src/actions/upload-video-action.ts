@@ -3,8 +3,8 @@
 import cloudinary from "@/lib/cloudinary";
 import { actionClient } from "@/lib/safe-action";
 import { ActionResult } from "@/lib/types";
-import { UploadApiResponse } from "cloudinary";
-import { z } from "zod";
+import { UploadApiResponse, UploadApiErrorResponse } from "cloudinary";
+import { string, z } from "zod";
 import { Logger } from "next-axiom";
 
 const log = new Logger();
@@ -45,11 +45,17 @@ export const uploadVideoAction = actionClient
 
         return { result };
       } catch (error) {
-        const message = "An unexpected error occurred during video upload";
+        actionLog.error("An unexpected error occurred", { error });
 
-        actionLog.error(message, { error });
+        if (error && (error as UploadApiErrorResponse).http_code) {
+          return {
+            error: (error as UploadApiErrorResponse).message,
+          };
+        }
 
-        return { error: message };
+        return {
+          error: "An unexpected error occurred. Please try again later.",
+        };
       } finally {
         await log.flush();
       }
@@ -64,7 +70,7 @@ function uploadVideoToCloudinary(
     cloudinary.uploader
       .upload_stream(
         {
-          resource_type: "image",
+          resource_type: "video",
           use_filename: true,
           unique_filename: false,
           filename_override: fileName,

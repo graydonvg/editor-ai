@@ -39,11 +39,9 @@ export const genFillAction = actionClient
 
         await waitForImageProcessing(genFillUrl, actionLog);
 
-        log;
-
         return { result: genFillUrl };
       } catch (error) {
-        actionLog.error("Error during image processing", {
+        actionLog.error("An unexpected error occurred", {
           error,
         });
 
@@ -52,7 +50,7 @@ export const genFillAction = actionClient
         }
 
         return {
-          error: "An unexpected error occurred while processing the image",
+          error: "An unexpected error occurred. Please try again later.",
         };
       } finally {
         await log.flush();

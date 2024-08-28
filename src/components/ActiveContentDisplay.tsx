@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import ImageComparison from "./ImageComparison";
 
-export default function ActiveImage() {
+export default function ActiveContentDisplay() {
   const isGenerating = useAppSelector((state) => state.image.isGenerating);
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
   const layerComparisonMode = useAppSelector(
@@ -39,7 +39,7 @@ export default function ActiveImage() {
 
         {activeLayer.resourceType === "video" && (
           <video
-            src={activeLayer.transcriptionUrl || activeLayer.url}
+            src={activeLayer.url}
             width={activeLayer.width}
             height={activeLayer.height}
             controls
