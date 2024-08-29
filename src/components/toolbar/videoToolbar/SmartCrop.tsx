@@ -34,7 +34,7 @@ export default function SmartCrop() {
     const toastId = toast.loading("Processing...");
 
     const result = await cropVideoAction({
-      activeVideoUrl: activeLayer.url!,
+      assetUrl: activeLayer.url!,
       aspectRatio: aspectRatio,
       height: activeLayer.height,
     });
@@ -96,7 +96,9 @@ export default function SmartCrop() {
         align="start"
         className="ml-4 w-full max-w-sm space-y-6"
       >
-        <h3 className="text-lg font-medium leading-none">Smart Crop</h3>
+        <h3 className="text-lg font-medium leading-none tracking-tight">
+          Smart Crop
+        </h3>
         <p className="text-pretty text-sm text-muted-foreground">
           Automatically crop your video to the requested dimensions while always
           keeping the main video subject in focus.

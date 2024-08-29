@@ -10,7 +10,7 @@ const log = new Logger();
 const actionLog = log.with({ context: "actions/bg-remove-action" });
 
 const bgRemoveSchema = z.object({
-  activeImageUrl: z.string(),
+  assetUrl: z.string(),
   format: z.string(),
 });
 
@@ -18,17 +18,17 @@ export const bgRemoveAction = actionClient
   .schema(bgRemoveSchema)
   .action(
     async ({
-      parsedInput: { activeImageUrl, format },
+      parsedInput: { assetUrl, format },
     }): Promise<ActionResult<string, string>> => {
       actionLog.info("Starting bgRemoveAction", {
-        activeImageUrl,
+        assetUrl,
         format,
       });
 
       try {
-        const bgRemoveUrl = constructUrl({ activeImageUrl, format });
+        const bgRemoveUrl = constructUrl({ assetUrl, format });
 
-        await waitForResourceProcessing(bgRemoveUrl, "Image", actionLog);
+        await waitForResourceProcessing(bgRemoveUrl, "image", actionLog);
 
         return { result: bgRemoveUrl };
       } catch (error) {
@@ -49,11 +49,8 @@ export const bgRemoveAction = actionClient
     },
   );
 
-function constructUrl({
-  activeImageUrl,
-  format,
-}: z.infer<typeof bgRemoveSchema>) {
-  const urlParts = activeImageUrl.split(format);
+function constructUrl({ assetUrl, format }: z.infer<typeof bgRemoveSchema>) {
+  const urlParts = assetUrl.split(format);
   const pngConvert = urlParts[0] + "png";
   const [baseUrl, imagePath] = pngConvert.split("/upload/");
 

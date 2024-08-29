@@ -11,24 +11,24 @@ const actionLog = log.with({ context: "actions/gen-remove-action" });
 
 const genRemoveSchema = z.object({
   prompt: z.string(),
-  activeImageUrl: z.string(),
+  assetUrl: z.string(),
 });
 
 export const genRemoveAction = actionClient
   .schema(genRemoveSchema)
   .action(
     async ({
-      parsedInput: { prompt, activeImageUrl },
+      parsedInput: { prompt, assetUrl },
     }): Promise<ActionResult<string, string>> => {
       actionLog.info("Starting genRemoveAction", {
         prompt,
-        activeImageUrl,
+        assetUrl,
       });
 
       try {
-        const genRemoveUrl = constructUrl({ activeImageUrl, prompt });
+        const genRemoveUrl = constructUrl({ assetUrl, prompt });
 
-        await waitForResourceProcessing(genRemoveUrl, "Image", actionLog);
+        await waitForResourceProcessing(genRemoveUrl, "image", actionLog);
 
         return { result: genRemoveUrl };
       } catch (error) {
@@ -49,11 +49,8 @@ export const genRemoveAction = actionClient
     },
   );
 
-function constructUrl({
-  activeImageUrl,
-  prompt,
-}: z.infer<typeof genRemoveSchema>) {
-  const [baseUrl, imagePath] = activeImageUrl.split("/upload/");
+function constructUrl({ assetUrl, prompt }: z.infer<typeof genRemoveSchema>) {
+  const [baseUrl, imagePath] = assetUrl.split("/upload/");
 
   if (!baseUrl || !imagePath) {
     throw new Error("Invalid URL format");

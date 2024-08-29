@@ -4,14 +4,16 @@ import { wait } from "../utils";
 
 export async function waitForResourceProcessing(
   url: string,
-  resource: "Image" | "Video",
-  actionLog: Logger,
+  resourceType: "image" | "video",
+  logger: Logger,
 ) {
   const maxAttempts = 10;
   const maxDelay = 15000;
-  const initialDelay = resource === "Image" ? 1000 : 2000;
+  const initialDelay = resourceType === "image" ? 1000 : 2000;
+  const capitalizedResourceType =
+    resourceType.charAt(0).toUpperCase() + resourceType.slice(1);
 
-  actionLog.info(`Starting ${resource} processing check`, {
+  logger.info(`Starting ${resourceType} processing check`, {
     url,
     maxAttempts,
   });
@@ -21,7 +23,7 @@ export async function waitForResourceProcessing(
       const isProcessed = await checkResourceProcessing(url);
 
       if (isProcessed) {
-        actionLog.info(`${resource} processed successfully`, {
+        logger.info(`${capitalizedResourceType} processed successfully`, {
           attempt,
           url,
         });
@@ -31,14 +33,14 @@ export async function waitForResourceProcessing(
 
       if (attempt === maxAttempts) {
         throw new Error(
-          `Unable to process ${resource.toLowerCase()} after multiple attempts. Please try again later.`,
+          `Unable to process ${resourceType} after multiple attempts. Please try again later.`,
         );
       }
 
       let delay = initialDelay * Math.pow(2, attempt - 1);
       delay = Math.min(delay, maxDelay);
 
-      actionLog.warn(`${resource} not yet processed, retrying...`, {
+      logger.warn(`${capitalizedResourceType} not yet processed, retrying...`, {
         attempt,
         url,
         nextCheckIn: `${delay / 1000}s`,

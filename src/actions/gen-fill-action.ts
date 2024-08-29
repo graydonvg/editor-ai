@@ -10,7 +10,7 @@ const log = new Logger();
 const actionLog = log.with({ context: "actions/gen-fill-action" });
 
 const genFillSchema = z.object({
-  activeImageUrl: z.string(),
+  assetUrl: z.string(),
   aspectRatio: z.string(),
   width: z.number(),
   height: z.number(),
@@ -20,10 +20,10 @@ export const genFillAction = actionClient
   .schema(genFillSchema)
   .action(
     async ({
-      parsedInput: { activeImageUrl, aspectRatio, width, height },
+      parsedInput: { assetUrl, aspectRatio, width, height },
     }): Promise<ActionResult<string, string>> => {
       actionLog.info("Starting genFillAction", {
-        activeImageUrl,
+        assetUrl,
         aspectRatio,
         width,
         height,
@@ -31,13 +31,13 @@ export const genFillAction = actionClient
 
       try {
         const genFillUrl = constructUrl({
-          activeImageUrl,
+          assetUrl,
           aspectRatio,
           width,
           height,
         });
 
-        await waitForResourceProcessing(genFillUrl, "Image", actionLog);
+        await waitForResourceProcessing(genFillUrl, "image", actionLog);
 
         return { result: genFillUrl };
       } catch (error) {
@@ -59,8 +59,8 @@ export const genFillAction = actionClient
   );
 
 function constructUrl(params: z.infer<typeof genFillSchema>) {
-  const { activeImageUrl, aspectRatio, width, height } = params;
-  const [baseUrl, imagePath] = activeImageUrl.split("/upload/");
+  const { assetUrl, aspectRatio, width, height } = params;
+  const [baseUrl, imagePath] = assetUrl.split("/upload/");
 
   if (!baseUrl || !imagePath) {
     throw new Error("Invalid URL format");

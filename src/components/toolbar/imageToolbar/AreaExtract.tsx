@@ -52,7 +52,7 @@ export default function AreaExtract() {
       .filter((prompt) => prompt.trim() !== "");
 
     const result = await areaExtractAction({
-      activeImageUrl: activeLayer.url!,
+      assetUrl: activeLayer.url!,
       prompts: promptData,
       multiple: details.multiple,
       mode: details.mode,
@@ -119,14 +119,18 @@ export default function AreaExtract() {
         side="right"
         align="center"
       >
-        <h3 className="text-lg font-medium leading-none">Area Extract</h3>
-        <p className="text-sm text-muted-foreground">
-          Extract specific areas of an image using natural language prompts.
-        </p>
-        <p className="text-sm text-muted-foreground">
-          Choose to keep or remove the selected areas, with options for
-          transparency and masking.
-        </p>
+        <h3 className="text-lg font-medium leading-none tracking-tight">
+          Area Extract
+        </h3>
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            Extract specific areas of an image using natural language prompts.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Choose to keep or remove the selected areas, with options for
+            transparency and masking.
+          </p>
+        </div>
         {prompts.map((prompt, index) => (
           <div key={`prompt-${index}`} className="grid gap-2">
             <Label htmlFor={`prompt-${index}`} className="text-nowrap">

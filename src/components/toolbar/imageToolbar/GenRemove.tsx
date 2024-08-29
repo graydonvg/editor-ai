@@ -32,7 +32,7 @@ export default function GenRemove() {
 
     const result = await genRemoveAction({
       prompt: selection,
-      activeImageUrl: activeLayer.url!,
+      assetUrl: activeLayer.url!,
     });
 
     if (result?.data?.result) {
@@ -78,36 +78,38 @@ export default function GenRemove() {
         side="right"
         align="start"
       >
-        <h3 className="text-lg font-medium leading-none">Generative Remove</h3>
-        <p className="text-sm text-muted-foreground">
-          Remove unwanted objects, text, or user-defined regions from images.
-        </p>
-        <p className="text-sm text-muted-foreground">
-          Specify the item you want to remove by using a short prompt like:
-          fork, text, mountain, etc.
-        </p>
-        <div className="flex flex-col space-y-4">
-          <div className="flex items-center space-x-2">
-            <Label htmlFor="selection">Selection:</Label>
-            <Input
-              id="selection"
-              value={selection}
-              onChange={(e) => setSelection(e.target.value)}
-              disabled={isGenerating}
-              className="h-8"
-              placeholder="Enter 1 item at a time"
-            />
-          </div>
-          <Button
-            disabled={
-              !activeLayer.url || !selection || isGenerating || isRemoving
-            }
-            onClick={removeObject}
-            className="w-full"
-          >
-            {isRemoving ? "Removing..." : "Remove Object"}
-          </Button>
+        <h3 className="text-lg font-medium leading-none tracking-tight">
+          Generative Remove
+        </h3>
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            Remove unwanted objects, text, or user-defined regions from images.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Specify the item you want to remove by using a short prompt like:
+            fork, text, mountain, etc.
+          </p>
         </div>
+        <div className="flex items-center space-x-2">
+          <Label htmlFor="object">Object:</Label>
+          <Input
+            id="object"
+            value={selection}
+            onChange={(e) => setSelection(e.target.value)}
+            disabled={isGenerating}
+            className="h-8"
+            placeholder="Enter 1 object at a time"
+          />
+        </div>
+        <Button
+          disabled={
+            !activeLayer.url || !selection || isGenerating || isRemoving
+          }
+          onClick={removeObject}
+          className="w-full"
+        >
+          {isRemoving ? "Removing..." : "Remove Object"}
+        </Button>
       </PopoverContent>
     </Popover>
   );

@@ -2,6 +2,7 @@ import { useAppSelector } from "@/lib/redux/hooks";
 import { ModeToggle } from "../ui/ModeToggle";
 import ImageToolbar from "./imageToolbar/ImageToolbar";
 import VideoToolbar from "./videoToolbar/VideoToolbar";
+import Export from "./Export";
 
 export default function Toolbar() {
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
@@ -14,6 +15,7 @@ export default function Toolbar() {
       <div className="flex flex-col gap-4">
         {activeLayer.resourceType === "image" ? <ImageToolbar /> : null}
         {activeLayer.resourceType === "video" ? <VideoToolbar /> : null}
+        <Export />
       </div>
     </div>
   );

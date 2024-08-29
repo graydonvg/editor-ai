@@ -75,7 +75,7 @@ export default function Transcription() {
         side="right"
         align="start"
       >
-        <h3 className="text-lg font-medium leading-none">
+        <h3 className="text-lg font-medium leading-none tracking-tight">
           Video Transcription
         </h3>
         <p className="text-pretty text-sm text-muted-foreground">

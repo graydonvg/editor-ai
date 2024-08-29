@@ -10,7 +10,7 @@ const log = new Logger();
 const actionLog = log.with({ context: "actions/crop-video-action" });
 
 const cropVideoSchema = z.object({
-  activeVideoUrl: z.string(),
+  assetUrl: z.string(),
   aspectRatio: z.string(),
   height: z.number(),
 });
@@ -19,22 +19,22 @@ export const cropVideoAction = actionClient
   .schema(cropVideoSchema)
   .action(
     async ({
-      parsedInput: { activeVideoUrl, aspectRatio, height },
+      parsedInput: { assetUrl, aspectRatio, height },
     }): Promise<ActionResult<string, string>> => {
       actionLog.info("Starting cropVideoAction", {
-        activeVideoUrl,
+        assetUrl,
         aspectRatio,
         height,
       });
 
       try {
         const cropVideoUrl = constructUrl({
-          activeVideoUrl,
+          assetUrl,
           aspectRatio,
           height,
         });
 
-        await waitForResourceProcessing(cropVideoUrl, "Video", actionLog);
+        await waitForResourceProcessing(cropVideoUrl, "video", actionLog);
 
         return { result: cropVideoUrl };
       } catch (error) {
@@ -56,17 +56,17 @@ export const cropVideoAction = actionClient
   );
 
 function constructUrl({
-  activeVideoUrl,
+  assetUrl,
   aspectRatio,
   height,
 }: z.infer<typeof cropVideoSchema>) {
-  const [baseUrl, imagePath] = activeVideoUrl.split("/upload/");
+  const [baseUrl, videoPath] = assetUrl.split("/upload/");
 
-  if (!baseUrl || !imagePath) {
+  if (!baseUrl || !videoPath) {
     throw new Error("Invalid URL format");
   }
 
-  const cropVideoUrl = `${baseUrl}/upload/ar_${aspectRatio},c_fill,g_auto,h_${height}/${imagePath}`;
+  const cropVideoUrl = `${baseUrl}/upload/ar_${aspectRatio},c_fill,g_auto,h_${height}/${videoPath}`;
 
   actionLog.info("Constructed URL successfully", {
     cropVideoUrl,

@@ -10,7 +10,7 @@ const log = new Logger();
 const actionLog = log.with({ context: "actions/area-extract-action" });
 
 const areaExtractSchema = z.object({
-  activeImageUrl: z.string(),
+  assetUrl: z.string(),
   prompts: z.array(z.string()),
   multiple: z.boolean().optional(),
   mode: z.enum(["content", "mask"]),
@@ -22,10 +22,10 @@ export const areaExtractAction = actionClient
   .schema(areaExtractSchema)
   .action(
     async ({
-      parsedInput: { activeImageUrl, prompts, multiple, mode, invert, format },
+      parsedInput: { assetUrl, prompts, multiple, mode, invert, format },
     }): Promise<ActionResult<string, string>> => {
       actionLog.info("Starting areaExtractAction", {
-        activeImageUrl,
+        assetUrl,
         prompts,
         multiple,
         mode,
@@ -35,7 +35,7 @@ export const areaExtractAction = actionClient
 
       try {
         const areaExtractUrl = constructUrl({
-          activeImageUrl,
+          assetUrl,
           prompts,
           multiple,
           mode,
@@ -43,7 +43,7 @@ export const areaExtractAction = actionClient
           format,
         });
 
-        await waitForResourceProcessing(areaExtractUrl, "Image", actionLog);
+        await waitForResourceProcessing(areaExtractUrl, "image", actionLog);
 
         return { result: areaExtractUrl };
       } catch (error) {
@@ -65,8 +65,8 @@ export const areaExtractAction = actionClient
   );
 
 function constructUrl(params: z.infer<typeof areaExtractSchema>) {
-  const { activeImageUrl, prompts, multiple, mode, invert, format } = params;
-  const urlParts = activeImageUrl.split(format);
+  const { assetUrl, prompts, multiple, mode, invert, format } = params;
+  const urlParts = assetUrl.split(format);
   const pngConvert = urlParts[0] + "png";
   const [baseUrl, imagePath] = pngConvert.split("/upload/");
 

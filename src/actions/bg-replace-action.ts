@@ -10,7 +10,7 @@ const log = new Logger();
 const actionLog = log.with({ context: "actions/bg-replace-action" });
 
 const bgReplaceSchema = z.object({
-  activeImageUrl: z.string(),
+  assetUrl: z.string(),
   prompt: z.string(),
 });
 
@@ -18,17 +18,17 @@ export const bgReplaceAction = actionClient
   .schema(bgReplaceSchema)
   .action(
     async ({
-      parsedInput: { activeImageUrl, prompt },
+      parsedInput: { assetUrl, prompt },
     }): Promise<ActionResult<string, string>> => {
       actionLog.info("Starting bgReplaceAction", {
-        activeImageUrl,
+        assetUrl,
         prompt,
       });
 
       try {
-        const bgReplaceUrl = constructUrl({ activeImageUrl, prompt });
+        const bgReplaceUrl = constructUrl({ assetUrl, prompt });
 
-        await waitForResourceProcessing(bgReplaceUrl, "Image", actionLog);
+        await waitForResourceProcessing(bgReplaceUrl, "image", actionLog);
 
         return { result: bgReplaceUrl };
       } catch (error) {
@@ -49,11 +49,8 @@ export const bgReplaceAction = actionClient
     },
   );
 
-function constructUrl({
-  activeImageUrl,
-  prompt,
-}: z.infer<typeof bgReplaceSchema>) {
-  const [baseUrl, imagePath] = activeImageUrl.split("/upload/");
+function constructUrl({ assetUrl, prompt }: z.infer<typeof bgReplaceSchema>) {
+  const [baseUrl, imagePath] = assetUrl.split("/upload/");
 
   if (!baseUrl || !imagePath) {
     throw new Error("Invalid URL format");

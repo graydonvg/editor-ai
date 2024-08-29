@@ -125,7 +125,7 @@ export default function GenFill() {
     const toastId = toast.loading("Processing...");
 
     const result = await genFillAction({
-      activeImageUrl: activeLayer.url!,
+      assetUrl: activeLayer.url!,
       aspectRatio: "1:1",
       width: newDimensions.width + activeLayer.width,
       height: newDimensions.height + activeLayer.height,
@@ -183,7 +183,9 @@ export default function GenFill() {
         side="right"
         align="start"
       >
-        <h3 className="text-lg font-medium leading-none">Generative Fill</h3>
+        <h3 className="text-lg font-medium leading-none tracking-tight">
+          Generative Fill
+        </h3>
         <p className="text-sm text-muted-foreground">
           Use AI to seamlessly expand or crop your images, integrating new
           content that matches the original.

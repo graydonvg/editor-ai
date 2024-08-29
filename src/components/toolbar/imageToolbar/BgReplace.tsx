@@ -33,7 +33,7 @@ export default function BgReplace() {
     const toastId = toast.loading("Processing...");
 
     const result = await bgReplaceAction({
-      activeImageUrl: activeLayer.url!,
+      assetUrl: activeLayer.url!,
       prompt: activeLayer.format!,
     });
 
@@ -89,43 +89,43 @@ export default function BgReplace() {
         side="right"
         align="start"
       >
-        <h3 className="text-lg font-medium leading-none">
+        <h3 className="text-lg font-medium leading-none tracking-tight">
           Generative Background Replace
         </h3>
-        <p className="text-sm text-muted-foreground">
-          Replace the background of an image with AI-generated content.
-        </p>
-        <p className="text-sm text-muted-foreground">
-          Provide your own description, or let the AI create a random background
-          for you.
-        </p>
-        <div className="flex flex-col space-y-4">
-          <div className="flex items-center space-x-2">
-            <Label htmlFor="background">Background:</Label>
-            <Input
-              id="background"
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              disabled={isGenerating}
-              className="h-8"
-              placeholder="Describe the new background"
-            />
-          </div>
-          <Button
-            disabled={
-              !activeLayer.url ||
-              isGenerating ||
-              isReplacing ||
-              BUTTON_DISABLED_KEYWORDS.some((keyword) =>
-                activeLayer.url?.includes(keyword),
-              )
-            }
-            onClick={replaceBackground}
-            className="w-full"
-          >
-            {isReplacing ? "Replacing..." : "Replace Background"}
-          </Button>
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            Replace the background of an image with AI-generated content.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Provide your own description, or let the AI create a random
+            background for you.
+          </p>
         </div>
+        <div className="flex items-center space-x-2">
+          <Label htmlFor="background">Background:</Label>
+          <Input
+            id="background"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            disabled={isGenerating}
+            className="h-8"
+            placeholder="Describe the new background"
+          />
+        </div>
+        <Button
+          disabled={
+            !activeLayer.url ||
+            isGenerating ||
+            isReplacing ||
+            BUTTON_DISABLED_KEYWORDS.some((keyword) =>
+              activeLayer.url?.includes(keyword),
+            )
+          }
+          onClick={replaceBackground}
+          className="w-full"
+        >
+          {isReplacing ? "Replacing..." : "Replace Background"}
+        </Button>
       </PopoverContent>
     </Popover>
   );

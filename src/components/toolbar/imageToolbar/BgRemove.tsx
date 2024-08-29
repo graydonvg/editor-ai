@@ -30,7 +30,7 @@ export default function BgRemove() {
     const toastId = toast.loading("Processing...");
 
     const result = await bgRemoveAction({
-      activeImageUrl: activeLayer.url!,
+      assetUrl: activeLayer.url!,
       format: activeLayer.format!,
     });
 
@@ -86,7 +86,9 @@ export default function BgRemove() {
         side="right"
         align="start"
       >
-        <h3 className="text-lg font-medium leading-none">Background Removal</h3>
+        <h3 className="text-lg font-medium leading-none tracking-tight">
+          Background Removal
+        </h3>
         <p className="text-pretty text-sm text-muted-foreground">
           Remove the background of an image with one simple click.
         </p>
