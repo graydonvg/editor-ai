@@ -78,7 +78,6 @@ export default function Export() {
         link.download = downloadAssetResponse.data.result.filename;
         document.body.appendChild(link);
         link.click();
-
         document.body.removeChild(link);
         URL.revokeObjectURL(downloadUrl);
       } catch (error) {

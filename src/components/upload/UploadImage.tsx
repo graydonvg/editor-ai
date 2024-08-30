@@ -88,9 +88,9 @@ export default function UploadImage() {
         <Card
           {...getRootProps()}
           className={cn(
-            "transition-all ease-out hover:cursor-pointer hover:border-primary hover:bg-secondary",
+            "transition-all ease-out hover:cursor-pointer hover:border-primary hover:bg-accent",
             {
-              "animate-pulse border-primary bg-secondary": isDragActive,
+              "animate-pulse border-primary bg-accent": isDragActive,
             },
           )}
         >
@@ -98,7 +98,7 @@ export default function UploadImage() {
             <input {...getInputProps()} type="text" />
             <div className="flex flex-col items-center justify-center gap-2">
               <Lottie animationData={imageUpload} className="h-48" />
-              <p className="text-2xl text-muted-foreground">
+              <p className="text-pretty text-center text-2xl text-muted-foreground">
                 {isDragActive
                   ? "Drop your image here!"
                   : "Start by uploading an image"}

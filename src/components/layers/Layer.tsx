@@ -48,7 +48,7 @@ export default function Layer({ layer, layerIndex }: Props) {
         transition,
       }}
       className={cn(
-        "cursor-pointer border border-transparent ease-in-out hover:bg-secondary",
+        "cursor-pointer border border-transparent ease-in-out hover:bg-accent",
         {
           "animate-pulse": isGenerating,
           "border-primary": layerComparisonMode

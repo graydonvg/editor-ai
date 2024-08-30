@@ -22,9 +22,9 @@ export default function UploadForm() {
               onClick={() => setSelectedType("image")}
               variant="outline"
               className={cn(
-                "flex h-fit cursor-pointer flex-col items-center justify-center gap-4 border-secondary px-6 py-4 text-muted-foreground",
+                "flex h-fit cursor-pointer flex-col items-center justify-center gap-4 border-muted px-6 py-4 text-muted-foreground",
                 {
-                  "border-primary text-primary": selectedType === "image",
+                  "border-primary bg-card": selectedType === "image",
                 },
               )}
             >
@@ -35,9 +35,9 @@ export default function UploadForm() {
               onClick={() => setSelectedType("video")}
               variant="outline"
               className={cn(
-                "flex h-fit cursor-pointer flex-col items-center justify-center gap-4 border-secondary px-6 py-4 text-muted-foreground",
+                "flex h-fit cursor-pointer flex-col items-center justify-center gap-4 border-muted px-6 py-4 text-muted-foreground",
                 {
-                  "border-primary text-primary": selectedType === "video",
+                  "border-primary bg-card": selectedType === "video",
                 },
               )}
             >

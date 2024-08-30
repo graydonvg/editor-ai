@@ -86,8 +86,8 @@ export default function Layers() {
   }
 
   return (
-    <Card className="relative flex shrink-0 basis-[360px] flex-col overflow-x-hidden shadow-2xl">
-      <CardHeader className={cn("bg-card px-4 py-6 shadow-sm")}>
+    <Card className="relative flex shrink-0 basis-[360px] flex-col overflow-x-hidden rounded-l-lg rounded-r-none">
+      <CardHeader className={cn("px-4 py-6 shadow-sm")}>
         {layerComparisonMode ? (
           <div>
             <CardTitle className="pb-2 text-sm">Comparing...</CardTitle>

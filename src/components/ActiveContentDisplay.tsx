@@ -15,14 +15,14 @@ export default function ActiveContentDisplay() {
 
   if (layerComparisonMode && comparedLayers.length > 0) {
     return (
-      <div className="relative flex h-full w-full flex-col items-center justify-center bg-secondary p-24">
+      <div className="relative flex h-full w-full flex-col items-center justify-center p-24">
         <ImageComparison />
       </div>
     );
   }
 
   return (
-    <div className="h-full w-full bg-secondary p-24">
+    <div className="h-full w-full p-24">
       <div className="relative flex h-full w-full items-center justify-center">
         {activeLayer.resourceType === "image" && (
           <Image

@@ -132,7 +132,7 @@ export default function AreaExtract() {
           </p>
         </div>
         {prompts.map((prompt, index) => (
-          <div key={`prompt-${index}`} className="grid gap-2">
+          <div key={`prompt-${index}`} className="grid gap-3">
             <Label htmlFor={`prompt-${index}`} className="text-nowrap">
               Prompt {index + 1}
             </Label>

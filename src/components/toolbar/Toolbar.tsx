@@ -8,7 +8,7 @@ export default function Toolbar() {
   const activeLayer = useAppSelector((state) => state.layer.activeLayer);
 
   return (
-    <div className="shrink-0 basis-[240px] px-4 py-6">
+    <div className="shrink-0 basis-[240px] bg-card px-4 py-6">
       <div className="pb-12 text-center">
         <ModeToggle />
       </div>
