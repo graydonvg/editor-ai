@@ -108,7 +108,7 @@ export default function BgReplace() {
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             disabled={isGenerating}
-            className="h-8 bg-accent"
+            className="h-8 bg-muted text-foreground"
             placeholder="Describe the new background"
           />
         </div>

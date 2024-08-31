@@ -4,24 +4,31 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 228 29% 97%;
+    --foreground: 230 21% 11%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* primary - primary buttons */
+    --primary: 229 83% 60%;
+    --primary-foreground: 229 81% 96%;
+    /* secondary not in use */
+    --secondary: 230 95% 76%;
+    --secondary-foreground: 230 100% 98%;
+    /* muted - input bg */
+    --muted: 228 100% 99%;
+    --muted-foreground: 230 6% 38%;
+    /* accent - hover */
+    --accent: 229 68% 95%;
+    --accent-foreground: 230 21% 11%;
+    /* destructive not in use */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
+    /* input - input and button borders */
     --input: 214.3 31.8% 91.4%;
+    /* ring - focus ring */
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
   }
@@ -39,10 +46,10 @@
     /* secondary not in use */
     --secondary: 230 95% 76%;
     --secondary-foreground: 230 100% 98%;
-    /* muted not in use */
-    --muted: 231 17% 23%;
+    /* muted - input bg */
+    --muted: 231 18% 20%;
     --muted-foreground: 229 9% 77%;
-    /* accent - inputs and hover */
+    /* accent - hover */
     --accent: 231 17% 23%;
     --accent-foreground: 228 20% 95%;
     /* destructive not in use */
