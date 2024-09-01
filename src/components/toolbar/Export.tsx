@@ -68,10 +68,6 @@ export default function Export() {
         const blob = await assetResponse.blob();
         const downloadUrl = URL.createObjectURL(blob);
 
-        console.log("assetResponse", assetResponse);
-        console.log("blob", blob);
-        console.log("downloadUrl", downloadUrl);
-
         handleToastUpdate(
           toastId,
           "Processing completed. Your download should begin soon!",
