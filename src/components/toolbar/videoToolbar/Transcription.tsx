@@ -66,7 +66,7 @@ export default function Transcription() {
       <PopoverTrigger asChild disabled={!activeLayer.publicId}>
         <Button variant="outline" className="p-8">
           <span className="flex flex-col items-center justify-center gap-1 text-xs font-medium">
-            Video Transcription <Captions size={20} aria-hidden="true" />
+            Video Transcription <Captions size={20} />
           </span>
         </Button>
       </PopoverTrigger>

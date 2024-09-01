@@ -76,8 +76,7 @@ export default function BgRemove() {
       >
         <Button variant="outline" className="p-8">
           <span className="flex flex-col items-center justify-center gap-1 text-xs font-medium">
-            {/* eslint-disable-next-line jsx-a11y/alt-text */}
-            Background Removal <ImageOff size={20} aria-hidden="true" />
+            Background Removal <ImageOff size={20} />
           </span>
         </Button>
       </PopoverTrigger>

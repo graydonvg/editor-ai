@@ -24,6 +24,7 @@ import {
 } from "@/lib/redux/features/imageSlice";
 import { downloadAssetAction } from "@/actions/download-asset-action";
 import { handleToastUpdate } from "../ui/Toast";
+import { Label } from "../ui/Label";
 
 export default function Export() {
   const dispatch = useAppDispatch();
@@ -67,6 +68,10 @@ export default function Export() {
         const blob = await assetResponse.blob();
         const downloadUrl = URL.createObjectURL(blob);
 
+        console.log("assetResponse", assetResponse);
+        console.log("blob", blob);
+        console.log("downloadUrl", downloadUrl);
+
         handleToastUpdate(
           toastId,
           "Processing completed. Your download should begin soon!",
@@ -101,6 +106,21 @@ export default function Export() {
     dispatch(generationStopped());
   }
 
+  function renderFormatOption(formatOption: string) {
+    const currentFormatIndicator = (
+      <span className="text-xs text-muted-foreground">(current format)</span>
+    );
+
+    const isCurrentFormat = activeLayer.format === formatOption;
+
+    return (
+      <>
+        <span>{`.${formatOption}`}</span>{" "}
+        {isCurrentFormat && currentFormatIndicator}
+      </>
+    );
+  }
+
   return (
     <Dialog>
       <DialogTrigger
@@ -115,7 +135,7 @@ export default function Export() {
         <Button variant="outline" className="py-8">
           <span className="flex flex-col items-center justify-center gap-1 text-xs font-medium">
             Export
-            <Download size={18} />
+            <Download size={20} />
           </span>
         </Button>
       </DialogTrigger>
@@ -185,17 +205,31 @@ export default function Export() {
             </span>
           </Button>
           {activeLayer.resourceType === "image" ? (
-            <Select onValueChange={setFormat}>
-              <SelectTrigger className="h-12">
-                <SelectValue placeholder="Select format" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="jpg">.jpg</SelectItem>
-                <SelectItem value="jpeg">.jpeg</SelectItem>
-                <SelectItem value="png">.png</SelectItem>
-                <SelectItem value="webp">.webp</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="space-y-2">
+              <Label>Select format</Label>
+              <Select
+                defaultValue={activeLayer.format}
+                onValueChange={setFormat}
+              >
+                <SelectTrigger className="h-12">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="jpg">
+                    {renderFormatOption("jpg")}
+                  </SelectItem>
+                  <SelectItem value="jpeg">
+                    {renderFormatOption("jpeg")}
+                  </SelectItem>
+                  <SelectItem value="png">
+                    {renderFormatOption("png")}
+                  </SelectItem>
+                  <SelectItem value="webp">
+                    {renderFormatOption("webp")}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           ) : null}
         </div>
         <Button

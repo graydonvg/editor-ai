@@ -87,7 +87,7 @@ export default function SmartCrop() {
       >
         <Button variant="outline" className="p-8">
           <span className="flex flex-col items-center justify-center gap-1 text-xs font-medium">
-            Smart Crop <Crop size={20} aria-hidden="true" />
+            Smart Crop <Crop size={20} />
           </span>
         </Button>
       </PopoverTrigger>

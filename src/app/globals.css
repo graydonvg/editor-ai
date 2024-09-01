@@ -12,10 +12,9 @@
     --popover-foreground: 222.2 84% 4.9%;
     /* primary - primary buttons */
     --primary: 229 83% 60%;
-    --primary-foreground: 229 81% 96%;
-    /* secondary not in use */
+    --primary-foreground: 0 0% 100%;
     --secondary: 230 95% 76%;
-    --secondary-foreground: 230 100% 98%;
+    --secondary-foreground: 0 0% 100%;
     /* muted - input bg */
     --muted: 228 100% 99%;
     --muted-foreground: 230 6% 38%;
@@ -42,10 +41,9 @@
     --popover-foreground: 228 20% 95%;
     /* primary - primary buttons */
     --primary: 229 83% 60%;
-    --primary-foreground: 229 81% 96%;
-    /* secondary not in use */
+    --primary-foreground: 0 0% 100%;
     --secondary: 230 95% 76%;
-    --secondary-foreground: 230 100% 98%;
+    --secondary-foreground: 0 0% 100%;
     /* muted - input bg */
     --muted: 231 18% 20%;
     --muted-foreground: 229 9% 77%;

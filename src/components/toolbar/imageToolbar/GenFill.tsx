@@ -13,7 +13,7 @@ import {
 } from "@/lib/redux/features/imageSlice";
 import { toast } from "react-toastify";
 import { handleToastUpdate } from "@/components/ui/Toast";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Label } from "@/components/ui/Label";
 import { Input } from "@/components/ui/Input";
 import { genFillAction } from "@/actions/gen-fill-action";
@@ -77,10 +77,10 @@ export default function GenFill() {
       left: "0",
       right: "0",
       bottom: "0",
-      boxShadow: `inset ${leftWidth} ${topHeight} 0 rgba(48, 119, 255, 1),
-  		inset -${rightWidth} ${topHeight} 0 rgba(48, 119, 255, 1),
-  		inset ${leftWidth} -${bottomHeight} 0 rgba(48, 119, 255, 1),
-  		inset ${leftWidth} -${bottomHeight} 0 rgba(48, 119, 255, 1)`,
+      boxShadow: `inset ${leftWidth} ${topHeight} 0 rgba(137, 157, 252, 1),
+  		inset -${rightWidth} ${topHeight} 0 rgba(137, 157, 252, 1),
+  		inset ${leftWidth} -${bottomHeight} 0 rgba(137, 157, 252, 1),
+  		inset ${leftWidth} -${bottomHeight} 0 rgba(137, 157, 252, 1)`,
     };
   }
 
@@ -110,7 +110,7 @@ export default function GenFill() {
 
     return (
       <div
-        className="absolute rounded-md bg-primary px-2 py-1 text-xs font-bold text-primary-foreground"
+        className="absolute rounded-md bg-accent px-2 py-1 text-xs font-bold text-accent-foreground"
         style={position}
       >
         {value > 0 ? "+" : "-"}
@@ -173,8 +173,7 @@ export default function GenFill() {
       >
         <Button variant="outline" className="p-8">
           <span className="flex flex-col items-center justify-center gap-1 text-xs font-medium">
-            {/* eslint-disable-next-line jsx-a11y/alt-text */}
-            Generative Fill <Crop size={20} aria-hidden="true" />
+            Generative Fill <Crop size={20} />
           </span>
         </Button>
       </PopoverTrigger>
@@ -194,14 +193,14 @@ export default function GenFill() {
           <div className="flex items-center justify-evenly">
             <div className="flex flex-col items-center">
               <span className="text-xs">Current dimensions:</span>
-              <p className="text-sm font-bold text-primary">
+              <p className="text-sm font-bold text-muted-foreground">
                 {activeLayer.width} x {activeLayer.height}
               </p>
             </div>
-            <ArrowRight size={28} />
+            <ArrowRight size={28} className="text-muted-foreground" />
             <div className="flex flex-col items-center">
               <span className="text-xs">New dimensions:</span>
-              <p className="text-sm font-bold text-primary">
+              <p className="text-sm font-bold text-muted-foreground">
                 {activeLayer.width + newDimensions.width} x{" "}
                 {activeLayer.height + newDimensions.height}
               </p>

@@ -158,7 +158,12 @@ export default function AreaExtract() {
             </div>
           </div>
         ))}
-        <Button onClick={addPrompt} size="sm" className="w-full">
+        <Button
+          onClick={addPrompt}
+          size="sm"
+          variant="secondary"
+          className="w-full"
+        >
           Add Prompt
         </Button>
         <div className="flex flex-col space-y-4">
@@ -172,6 +177,7 @@ export default function AreaExtract() {
                   multiple: checked as boolean,
                 }))
               }
+              className="border-secondary data-[state=checked]:bg-secondary"
             />
             <Label htmlFor="multiple">Detect multiple</Label>
             <TooltipProvider delayDuration={0}>
@@ -197,7 +203,11 @@ export default function AreaExtract() {
             <h4>Mode:</h4>
             <div className="flex flex-col space-y-4">
               <div className="flex items-center space-x-2">
-                <RadioGroupItem id="mode-content" value="content" />
+                <RadioGroupItem
+                  id="mode-content"
+                  value="content"
+                  className="border-secondary text-secondary"
+                />
                 <Label htmlFor="mode-content">Content</Label>
                 <TooltipProvider delayDuration={0}>
                   <Tooltip>
@@ -211,7 +221,11 @@ export default function AreaExtract() {
                 </TooltipProvider>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem id="mode-mask" value="mask" />
+                <RadioGroupItem
+                  id="mode-mask"
+                  value="mask"
+                  className="border-secondary text-secondary"
+                />
                 <Label htmlFor="mode-mask">Mask</Label>
                 <TooltipProvider delayDuration={0}>
                   <Tooltip>
@@ -240,6 +254,7 @@ export default function AreaExtract() {
                   invert: checked as boolean,
                 }))
               }
+              className="border-secondary data-[state=checked]:bg-secondary"
             />
             <Label htmlFor="invert">Invert</Label>
             <TooltipProvider delayDuration={0}>
